@@ -99,5 +99,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     //Premier commentaire
-    //2eme commentaire
 }
