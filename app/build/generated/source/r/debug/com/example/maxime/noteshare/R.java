@@ -1934,6 +1934,7 @@ containing a value of this type.
         public static final int snackbar_text_size=0x7f070062;
         public static final int tab_max_width=0x7f070063;
         public static final int tab_min_width=0x7f070015;
+        public static final int title_header_height=0x7f070064;
     }
     public static final class drawable {
         public static final int abc_ab_share_pack_mtrl_alpha=0x7f020000;
@@ -2047,6 +2048,7 @@ containing a value of this type.
         public static final int disableHome=0x7f0c000d;
         public static final int drawer_layout=0x7f0c0066;
         public static final int dropdown=0x7f0c0031;
+        public static final int editText=0x7f0c006a;
         public static final int edit_query=0x7f0c0059;
         public static final int end=0x7f0c0020;
         public static final int end_padder=0x7f0c007a;
@@ -2055,7 +2057,6 @@ containing a value of this type.
         public static final int exitUntilCollapsed=0x7f0c0016;
         public static final int expand_activities_button=0x7f0c003e;
         public static final int expanded_menu=0x7f0c004e;
-        public static final int fab=0x7f0c0069;
         public static final int fill=0x7f0c0021;
         public static final int fill_horizontal=0x7f0c0022;
         public static final int fill_vertical=0x7f0c0023;
@@ -2065,7 +2066,7 @@ containing a value of this type.
         public static final int icon=0x7f0c0042;
         public static final int ifRoom=0x7f0c002d;
         public static final int image=0x7f0c003f;
-        public static final int imageView=0x7f0c006c;
+        public static final int imageView=0x7f0c006d;
         public static final int info=0x7f0c0079;
         public static final int left=0x7f0c0024;
         public static final int line1=0x7f0c0073;
@@ -2112,8 +2113,8 @@ containing a value of this type.
         public static final int showCustom=0x7f0c0010;
         public static final int showHome=0x7f0c0011;
         public static final int showTitle=0x7f0c0012;
-        public static final int snackbar_action=0x7f0c006b;
-        public static final int snackbar_text=0x7f0c006a;
+        public static final int snackbar_action=0x7f0c006c;
+        public static final int snackbar_text=0x7f0c006b;
         public static final int split_action_bar=0x7f0c0007;
         public static final int src_atop=0x7f0c0037;
         public static final int src_in=0x7f0c0038;
@@ -2125,9 +2126,9 @@ containing a value of this type.
         public static final int text=0x7f0c0078;
         public static final int text2=0x7f0c0076;
         public static final int textSpacerNoButtons=0x7f0c004a;
-        public static final int textView=0x7f0c006d;
         public static final int time=0x7f0c0074;
         public static final int title=0x7f0c0043;
+        public static final int titleEdit=0x7f0c0069;
         public static final int title_template=0x7f0c0046;
         public static final int toolbar=0x7f0c0068;
         public static final int top=0x7f0c0027;
@@ -2226,9 +2227,11 @@ containing a value of this type.
         public static final int action_settings=0x7f060011;
         public static final int app_name=0x7f060012;
         public static final int appbar_scrolling_view_behavior=0x7f060013;
-        public static final int navigation_drawer_close=0x7f060014;
-        public static final int navigation_drawer_open=0x7f060015;
-        public static final int status_bar_notification_info_overflow=0x7f060016;
+        public static final int content_placeholder=0x7f060014;
+        public static final int navigation_drawer_close=0x7f060015;
+        public static final int navigation_drawer_open=0x7f060016;
+        public static final int status_bar_notification_info_overflow=0x7f060017;
+        public static final int title_placeholder=0x7f060018;
     }
     public static final class style {
         public static final int AlertDialog_AppCompat=0x7f080075;
