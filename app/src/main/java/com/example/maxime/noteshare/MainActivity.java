@@ -24,8 +24,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationleftView = (NavigationView) findViewById(R.id.nav_left_view);
+        navigationleftView.setNavigationItemSelectedListener(this);
+
+        NavigationView navigationrightView = (NavigationView) findViewById(R.id.nav_right_view);
+        navigationrightView.setNavigationItemSelectedListener(this);
     }
 
     @Override

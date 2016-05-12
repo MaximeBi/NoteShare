@@ -257,8 +257,10 @@
     <string name="app_name">NoteShare</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="content_placeholder">Content ...</string>
+    <string name="left_menu_name">Local Slides</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="right_menu_name">Shared Slides</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="title_placeholder">Title</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>

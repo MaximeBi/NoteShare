@@ -80,10 +80,6 @@
         "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/layout/abc_action_mode_bar.xml"
     },
     {
-        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/nav_header_main.xml",
-        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/src/main/res/layout/nav_header_main.xml"
-    },
-    {
         "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
         "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/layout/abc_screen_toolbar.xml"
     },
@@ -98,6 +94,10 @@
     {
         "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/layout_snackbar_include.xml",
         "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/res/layout/layout_snackbar_include.xml"
+    },
+    {
+        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/nav_header_left_main.xml",
+        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/src/main/res/layout/nav_header_left_main.xml"
     },
     {
         "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/layout_tab_text.xml",
@@ -182,6 +182,10 @@
     {
         "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/notification_media_cancel_action.xml",
         "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/res/layout/notification_media_cancel_action.xml"
+    },
+    {
+        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/nav_header_right_main.xml",
+        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/src/main/res/layout/nav_header_right_main.xml"
     },
     {
         "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
