@@ -1,6 +1,10 @@
 [
     {
-        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/layout_snackbar.xml",
-        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/res/layout-sw600dp/layout_snackbar.xml"
+        "merged": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\layout_snackbar.xml",
+        "source": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\exploded-aar\\com.android.support\\design\\22.2.1\\res\\layout-sw600dp\\layout_snackbar.xml"
+    },
+    {
+        "merged": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\layout_snackbar.xml",
+        "source": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\build\\intermediates\\exploded-aar\\com.android.support\\design\\22.2.1\\res\\layout-sw600dp\\layout_snackbar.xml"
     }
 ]

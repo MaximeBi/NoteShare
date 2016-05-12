@@ -1,14 +1,26 @@
 [
     {
-        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/menu/main.xml",
-        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/src/main/res/menu/main.xml"
+        "merged": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\menu\\activity_left_drawer.xml",
+        "source": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\src\\main\\res\\menu\\activity_left_drawer.xml"
     },
     {
-        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/menu/activity_right_drawer.xml",
-        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/src/main/res/menu/activity_right_drawer.xml"
+        "merged": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\menu\\activity_left_drawer.xml",
+        "source": "E:\\AndroidProgramme\\NoteShare\\app\\src\\main\\res\\menu\\activity_left_drawer.xml"
     },
     {
-        "merged": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/build/intermediates/res/merged/debug/menu/activity_left_drawer.xml",
-        "source": "/Users/ana/Documents/Ana_perso/anaig/Compiègne/GI04/NF28/NoteShare/NoteShare/app/src/main/res/menu/activity_left_drawer.xml"
+        "merged": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\menu\\activity_right_drawer.xml",
+        "source": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\src\\main\\res\\menu\\activity_right_drawer.xml"
+    },
+    {
+        "merged": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\menu\\activity_right_drawer.xml",
+        "source": "E:\\AndroidProgramme\\NoteShare\\app\\src\\main\\res\\menu\\activity_right_drawer.xml"
+    },
+    {
+        "merged": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\menu\\main.xml",
+        "source": "E:\\Users\\ana\\Documents\\Ana_perso\\anaig\\Compiègne\\GI04\\NF28\\NoteShare\\NoteShare\\app\\src\\main\\res\\menu\\main.xml"
+    },
+    {
+        "merged": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\menu\\main.xml",
+        "source": "E:\\AndroidProgramme\\NoteShare\\app\\src\\main\\res\\menu\\main.xml"
     }
 ]
