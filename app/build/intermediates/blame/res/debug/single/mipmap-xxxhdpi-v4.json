@@ -1,5 +1,9 @@
 [
     {
+        "merged": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\ic_search.png",
+        "source": "E:\\AndroidProgramme\\NoteShare\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_search.png"
+    },
+    {
         "merged": "E:\\AndroidProgramme\\NoteShare\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\note_share_icon.png",
         "source": "E:\\AndroidProgramme\\NoteShare\\app\\src\\main\\res\\mipmap-xxxhdpi\\note_share_icon.png"
     },
