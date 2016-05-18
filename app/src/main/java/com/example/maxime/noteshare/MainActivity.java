@@ -7,14 +7,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    EditText mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +29,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationrightView = (NavigationView) findViewById(R.id.nav_right_view);
         navigationrightView.setNavigationItemSelectedListener(this);
-
-        mTextView = (EditText) findViewById(R.id.editText);
     }
 
     @Override
@@ -74,30 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        String string = null;
 
-        switch (id) {
-            case R.id.nav_camera:
-                string = "nav_camera";
-                break;
-            case R.id.nav_gallery:
-                string = "nav_gallery";
-                break;
-            case R.id.nav_slideshow:
-                string = "nav_slideshow";
-                break;
-            case R.id.nav_manage:
-                string = "nav_manage";
-                break;
-            case R.id.nav_share:
-                string = "nav_share";
-                break;
-            case R.id.nav_send:
-                string = "nav_send";
-                break;
-        }
-
-        /*
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -111,9 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_send) {
 
         }
-        */
-        if (!TextUtils.isEmpty(string))
-            mTextView.setText("you have clicked "+string);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
