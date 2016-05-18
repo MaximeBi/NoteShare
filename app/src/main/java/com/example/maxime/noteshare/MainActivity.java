@@ -2,18 +2,24 @@ package com.example.maxime.noteshare;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public EditText mTextView;
+    private GestureDetectorCompat detector;
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationrightView.setNavigationItemSelectedListener(this);
 
         mTextView = (EditText) findViewById(R.id.editText);
+        this.detector = new GestureDetectorCompat(this, new MyGesture());
+
+        mTextView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                detector.onTouchEvent(event);
+                return false;
+            }
+        });
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -115,5 +132,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public class MyGesture extends GestureDetector.SimpleOnGestureListener{
+
+        private static final int SWIPE_MIN_DISTANCE = 50;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = e2.getY() - e1.getY();
+                float diffX = e2.getX() - e1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        if (diffX > 0) {
+                            onRightSwipe();
+                        } else {
+                            onLeftSwipe();
+                        }
+                    }
+                } else {
+                    if (Math.abs(diffY) > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                        if (diffY > 0) {
+                            onBottomSwipe();
+                        } else {
+                            onTopSwipe();
+                        }
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
+        }
+
+        public void onLeftSwipe(){
+            Toast.makeText(getApplicationContext(),"LEFT", Toast.LENGTH_SHORT).show();
+        }
+
+        public void onRightSwipe(){
+            Toast.makeText(getApplicationContext(),"RIGHT", Toast.LENGTH_SHORT).show();
+        }
+
+        public void onTopSwipe(){
+            Toast.makeText(getApplicationContext(),"TOP", Toast.LENGTH_SHORT).show();
+        }
+
+        public void onBottomSwipe(){
+            Toast.makeText(getApplicationContext(),"BOTTOM", Toast.LENGTH_SHORT).show();
+        }
     }
 }
