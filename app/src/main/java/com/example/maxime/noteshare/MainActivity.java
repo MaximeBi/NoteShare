@@ -1,5 +1,6 @@
 package com.example.maxime.noteshare;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GestureDetectorCompat;
@@ -17,9 +18,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public EditText mTextView;
     private GestureDetectorCompat detector;
+    public RequestQueue queue;
+    public StringRequest query;
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onTouch(View v, MotionEvent event) {
                 detector.onTouchEvent(event);
                 return false;
+            }
+        });
+
+        queue = Volley.newRequestQueue(this);
+        String url = "http://192.168.1.58:8080";
+
+        query = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getApplicationContext(), "Note partagée sur le serveur", Toast.LENGTH_LONG).show();
+                mTextView.setText(response);
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur partage de la note", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -178,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         public void onTopSwipe(){
             Toast.makeText(getApplicationContext(),"TOP", Toast.LENGTH_SHORT).show();
+            queue.add(query);
         }
 
         public void onBottomSwipe(){
