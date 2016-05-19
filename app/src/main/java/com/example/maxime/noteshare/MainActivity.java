@@ -1,5 +1,6 @@
 package com.example.maxime.noteshare;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GestureDetectorCompat;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -25,15 +27,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private EditText titleEdit;
-    public EditText contentEdit;
+    public EditText mTextView;
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
     public RelativeLayout screen;
-    private Note editingNote;
-
+    public ListView menu_left, menu_right;
+    public ArrayList<Note> notes_left, notes_right;
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +56,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationrightView = (NavigationView) findViewById(R.id.nav_right_view);
         navigationrightView.setNavigationItemSelectedListener(this);
 
-        editingNote = new Note();
-        titleEdit = (EditText) findViewById(R.id.title_edit);
-        contentEdit = (EditText) findViewById(R.id.content_edit);
+        mTextView = (EditText) findViewById(R.id.content_edit);
+
+        menu_left = (ListView) findViewById(R.id.menu_left);
+        notes_left = new ArrayList<>();
+        notes_left.add(new Note("Title 1", "Content 1"));
+        notes_left.add(new Note("Title 2", "Content 2"));
+        NoteAdapter adapter_left = new NoteAdapter(this,notes_left);
+        menu_left.setAdapter(adapter_left);
+
+        menu_right = (ListView) findViewById(R.id.menu_right);
+        notes_right = new ArrayList<>();
+        notes_right.add(new Note("Title 3","Content 3"));
+        notes_right.add(new Note("Title 4","Content 4"));
+        NoteAdapter adapter_right = new NoteAdapter(this,notes_right);
+        menu_right.setAdapter(adapter_right);
 
         screen = (RelativeLayout) findViewById(R.id.window_id);
 
         this.detector = new GestureDetectorCompat(this, new MyGesture());
 
-        contentEdit.setOnTouchListener(new View.OnTouchListener() {
+
+        mTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 detector.onTouchEvent(event);
@@ -75,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(String response) {
                 Toast.makeText(getApplicationContext(), "Note partagée sur le serveur", Toast.LENGTH_LONG).show();
-                contentEdit.setText(response);
+                mTextView.setText(response);
             }
         }, new Response.ErrorListener(){
             @Override
@@ -112,30 +129,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_new) {
-            createNewNote();
-            return true;
-        }
         if (id == R.id.action_save) {
-            saveNote();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void createNewNote() {
-        editingNote.reset();
-        titleEdit.setText(null);
-        contentEdit.setText(null);
-
-    }
-
-    private void saveNote() {
-        editingNote.setTitle(titleEdit.getText().toString());
-        editingNote.setContent(contentEdit.getText().toString());
-        NotesManager notesManager = NotesManager.getInstance(getApplicationContext());
-        editingNote.copy(notesManager.createOrUpdate(editingNote));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -167,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (!TextUtils.isEmpty(string))
-            contentEdit.setText("You have clicked "+string);
+            mTextView.setText("You have clicked "+string);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

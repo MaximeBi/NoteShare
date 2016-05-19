@@ -27,15 +27,15 @@ public class Note implements Serializable {
         this.collaborators = new ArrayList<String>();
     }
 
-//    public Note(String title, String content) {
-//        this.title = title;
-//        this.content = content;
-//        this.keywords = new ArrayList<String>();
-//        this.collaborators = new ArrayList<String>();
-//        this.creationDate = new Date();
-//        this.lastUpdate = new Date();
-//        this.id = createId();
-//    }
+    public Note(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.keywords = new ArrayList<String>();
+        this.collaborators = new ArrayList<String>();
+        this.creationDate = new Date();
+        this.lastUpdate = new Date();
+        this.id = createId();
+    }
 
     public Note(Note n) {
         this.title = n.title;
