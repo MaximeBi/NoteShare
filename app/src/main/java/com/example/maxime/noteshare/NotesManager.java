@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Kapil on 12/05/2016.
- */
 public class NotesManager {
 
     private static NotesManager instance = null;
@@ -32,7 +29,7 @@ public class NotesManager {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        notes = new ArrayList<Note>();
+        notes = new ArrayList<>();
         this.context = context;
         loadNotesFromFolder();
     }

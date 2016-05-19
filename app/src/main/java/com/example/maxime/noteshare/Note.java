@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by Kapil on 12/05/2016.
- */
 public class Note implements Serializable {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -23,15 +20,15 @@ public class Note implements Serializable {
     private Date lastUpdate;
 
     public Note() {
-        this.keywords = new ArrayList<String>();
-        this.collaborators = new ArrayList<String>();
+        this.keywords = new ArrayList<>();
+        this.collaborators = new ArrayList<>();
     }
 
     public Note(String title, String content) {
         this.title = title;
         this.content = content;
-        this.keywords = new ArrayList<String>();
-        this.collaborators = new ArrayList<String>();
+        this.keywords = new ArrayList<>();
+        this.collaborators = new ArrayList<>();
         this.creationDate = new Date();
         this.lastUpdate = new Date();
         this.id = createId();
@@ -41,9 +38,9 @@ public class Note implements Serializable {
         this.title = n.title;
         this.content = n.content;
         this.author = n.author;
-        this.keywords = new ArrayList<String>();
+        this.keywords = new ArrayList<>();
         this.keywords.addAll(n.keywords);
-        this.collaborators = new ArrayList<String>();
+        this.collaborators = new ArrayList<>();
         this.collaborators.addAll(n.collaborators);
         this.creationDate = new Date();
         this.lastUpdate = new Date();

@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.LinearLayout;
 
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -31,7 +32,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,13 +79,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         contentEdit = (EditText) findViewById(R.id.content_edit);
 
         menu_left = (ListView) findViewById(R.id.menu_left);
-        adapter_left = new NoteAdapter(this, notesManager.getNotes());
-        menu_left.setAdapter(adapter_left);
+        //adapter_left = new NoteAdapter(this, notesManager.getNotes());
+        //menu_left.setAdapter(adapter_left);
+        notes_left = new ArrayList<>();
+        ArrayList<HashMap<String, Object>> listItem = new ArrayList<>();
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format2 = new SimpleDateFormat("hh:mm");
+        Date today = null;
+        try {
+            today = format.parse(format.format(new Date()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        for(int i=0;i<5;i++)
+        {
+            notes_left.add(new Note("title"+i, "content"+i));
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("ItemImage", R.mipmap.note_share_icon);
+            map.put("ItemTitle", notes_left.get(i).getTitle());
+            Date lastUpdate = null;
+            try {
+                lastUpdate = format.parse(format.format(notes_left.get(i).getLastUpdate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            String date = null;
+            if(today != null && lastUpdate.compareTo(today)==0){
+                date = format2.format(notes_left.get(i).getLastUpdate());
+            }
+            else if(today != null){
+                date = format.format(lastUpdate);
+            }
+            map.put("ItemText", date);
+            listItem.add(map);
+        }
+
+        SimpleAdapter adapter_left = new SimpleAdapter(this,listItem, R.layout.element_note,
+                new String[] {"ItemImage","ItemTitle", "ItemText"},
+                new int[] {R.id.ItemImage,R.id.ItemTitle,R.id.ItemText}
+        );
+
+        menu_left.setAdapter(adapter_left);//为ListView绑定适配器
 
 //        menu_left = (ListView) findViewById(R.id.menu_left);
-//        notes_left = new ArrayList<>();
-//        notes_left.add(new Note("Title 1", "Content 1"));
-//        notes_left.add(new Note("Title 2", "Content 2"));
 //        NoteAdapter adapter_left = new NoteAdapter(this,notes_left);
 //        menu_left.setAdapter(adapter_left);
 
