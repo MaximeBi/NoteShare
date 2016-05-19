@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.ListView;
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (!TextUtils.isEmpty(string))
-            mTextView.setText("You have clicked "+string);
+            mTextView.setText("You have clicked "+ string);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -183,15 +184,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         private static final int SWIPE_MIN_DISTANCE = 50;
         private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-
+        private boolean onTouch = false;
 
         @Override
-        public void onLongPress(MotionEvent e) {
-            choices.setVisibility(View.VISIBLE);
-            super.onLongPress(e);
+        public boolean onDown(MotionEvent e) {
+            if(onTouch){
+                choices.setVisibility(View.INVISIBLE);
+                this.onTouch = false;
+            }
+            return true;
         }
 
         @Override
+        public void onLongPress(MotionEvent e) {
+            this.onTouch = true;
+            choices.setVisibility(View.VISIBLE);
+
+            Button send_host = (Button) findViewById(R.id.host);
+            Button send_local = (Button) findViewById(R.id.local);
+
+            send_host.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onTopSwipe();
+                }
+            });
+
+            send_local.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBottomSwipe();
+                }
+            });
+            super.onLongPress(e);
+        }
+
+        /*@Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             boolean result = false;
             try {
@@ -218,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 exception.printStackTrace();
             }
             return result;
-        }
+        }*/
 
         public void onLeftSwipe(){
             Toast.makeText(getApplicationContext(),"LEFT", Toast.LENGTH_SHORT).show();
@@ -229,12 +257,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         public void onTopSwipe(){
-            Toast.makeText(getApplicationContext(),"TOP", Toast.LENGTH_SHORT).show();
             queue.add(query);
+            choices.setVisibility(View.INVISIBLE);
         }
 
         public void onBottomSwipe(){
-            Toast.makeText(getApplicationContext(),"BOTTOM", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Note sauvegardée en mémoire locale", Toast.LENGTH_SHORT).show();
+            choices.setVisibility(View.INVISIBLE);
         }
     }
 }
