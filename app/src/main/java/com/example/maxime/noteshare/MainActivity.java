@@ -1,6 +1,5 @@
 package com.example.maxime.noteshare;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GestureDetectorCompat;
@@ -27,12 +26,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public EditText mTextView;
+    private EditText titleEdit;
+    public EditText contentEdit;
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
     public RelativeLayout screen;
-    //test
+    private Note editingNote;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,14 +52,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationrightView = (NavigationView) findViewById(R.id.nav_right_view);
         navigationrightView.setNavigationItemSelectedListener(this);
 
-        mTextView = (EditText) findViewById(R.id.content_edit);
+        editingNote = new Note();
+        titleEdit = (EditText) findViewById(R.id.title_edit);
+        contentEdit = (EditText) findViewById(R.id.content_edit);
 
         screen = (RelativeLayout) findViewById(R.id.window_id);
 
         this.detector = new GestureDetectorCompat(this, new MyGesture());
 
-
-        mTextView.setOnTouchListener(new View.OnTouchListener() {
+        contentEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 detector.onTouchEvent(event);
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(String response) {
                 Toast.makeText(getApplicationContext(), "Note partagée sur le serveur", Toast.LENGTH_LONG).show();
-                mTextView.setText(response);
+                contentEdit.setText(response);
             }
         }, new Response.ErrorListener(){
             @Override
@@ -110,11 +112,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_new) {
+            createNewNote();
+            return true;
+        }
         if (id == R.id.action_save) {
+            saveNote();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void createNewNote() {
+        editingNote.reset();
+        titleEdit.setText(null);
+        contentEdit.setText(null);
+
+    }
+
+    private void saveNote() {
+        editingNote.setTitle(titleEdit.getText().toString());
+        editingNote.setContent(contentEdit.getText().toString());
+        NotesManager notesManager = NotesManager.getInstance(getApplicationContext());
+        editingNote.copy(notesManager.createOrUpdate(editingNote));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -146,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (!TextUtils.isEmpty(string))
-            mTextView.setText("You have clicked "+string);
+            contentEdit.setText("You have clicked "+string);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
