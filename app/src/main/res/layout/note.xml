@@ -30,4 +30,5 @@
             android:layout_height="wrap_content"
             android:id="@+id/item_deadline"/>
     </LinearLayout>
+
 </LinearLayout>
