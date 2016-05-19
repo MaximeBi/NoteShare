@@ -37,6 +37,7 @@
         android:hint="@string/content_placeholder" />
 
     <LinearLayout
+        android:id="@+id/choice_upload"
         android:orientation="vertical"
         android:layout_width="200dp"
         android:layout_height="200dp"

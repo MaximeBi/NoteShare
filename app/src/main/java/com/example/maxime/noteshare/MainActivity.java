@@ -16,7 +16,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+
 import android.widget.ListView;
+
+import android.widget.LinearLayout;
+
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -37,7 +41,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public RelativeLayout screen;
     public ListView menu_left, menu_right;
     public ArrayList<Note> notes_left, notes_right;
-    //test
+
+    public LinearLayout choices;
+    private Note editingNote;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NoteAdapter adapter_right = new NoteAdapter(this,notes_right);
         menu_right.setAdapter(adapter_right);
 
-        screen = (RelativeLayout) findViewById(R.id.window_id);
+        choices = (LinearLayout) findViewById(R.id.choice_upload);
 
         this.detector = new GestureDetectorCompat(this, new MyGesture());
 
@@ -179,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onLongPress(MotionEvent e) {
+            choices.setVisibility(View.VISIBLE);
             super.onLongPress(e);
         }
 
