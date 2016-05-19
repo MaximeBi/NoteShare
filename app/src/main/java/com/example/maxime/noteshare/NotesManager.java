@@ -24,7 +24,7 @@ public class NotesManager {
     private static NotesManager instance = null;
     private static final String FOLDER_NAME = "NoteShare";
     private File folder;
-    private Map<String, Note> notes;
+    private ArrayList<Note> notes;
     private Context context;
 
     public NotesManager(Context context) {
@@ -32,7 +32,7 @@ public class NotesManager {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        notes = new HashMap<String, Note>();
+        notes = new ArrayList<Note>();
         this.context = context;
         loadNotesFromFolder();
     }
@@ -44,34 +44,34 @@ public class NotesManager {
         return instance;
     }
 
-    public Note createOrUpdate(Note note) {
-        if(note.hasId()) {
-            return update(note);
+    public Note createOrUpdate(Note original, String title, String content) {
+        if(original == null) {
+            return create(title, content);
         } else {
-            return create(note);
+            return update(original, title, content);
         }
     }
 
-    private Note create(Note newNote) {
-        Note note = new Note(newNote);
-        notes.put(note.getId(), note);
-        createOrUpdateFile(note);
+    private Note create(String title, String content) {
+        Note note = new Note(title, content);
+        notes.add(note);
+        createOrUpdateFile(note, R.string.note_created);
         return note;
     }
 
-    private Note update(Note updatedNote) {
-        Note note = notes.get(updatedNote.getId());
-        note.update(updatedNote);
-        createOrUpdateFile(note);
-        return note;
+    private Note update(Note originalNote, String title, String content) {
+        originalNote.setTitle(title);
+        originalNote.setContent(content);
+        createOrUpdateFile(originalNote, R.string.note_updated);
+        return originalNote;
     }
 
-    public void createOrUpdateFile(Note note) {
+    private void createOrUpdateFile(Note note, int message) {
         try{
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(folder+File.separator+note.getId()+".ser")));
             oos.writeObject(note);
             oos.close();
-            Toast.makeText(context, note.getId()+".ser created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getString(message), Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -84,7 +84,7 @@ public class NotesManager {
         if (directoryListing != null) {
             for (File note : directoryListing) {
                 Note n = loadNote(note);
-                notes.put(n.getId(), n);
+                notes.add(n);
             }
         }
     }
@@ -111,7 +111,7 @@ public class NotesManager {
         return folder;
     }
 
-    public Map<String, Note> getNotes() {
+    public ArrayList<Note> getNotes() {
         return notes;
     }
 }

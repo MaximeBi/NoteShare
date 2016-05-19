@@ -1,6 +1,5 @@
 package com.example.maxime.noteshare;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GestureDetectorCompat;
@@ -35,7 +34,11 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public EditText mTextView;
+
+    private NotesManager notesManager;
+    private Note originalNote;
+    private EditText titleEdit;
+    public EditText contentEdit;
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ArrayList<Note> notes_left, notes_right;
 
     public LinearLayout choices;
-    private Note editingNote;
+    private NoteAdapter adapter_left;
 
 
     @Override
@@ -65,14 +68,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationrightView = (NavigationView) findViewById(R.id.nav_right_view);
         navigationrightView.setNavigationItemSelectedListener(this);
 
-        mTextView = (EditText) findViewById(R.id.content_edit);
+        notesManager = NotesManager.getInstance(getApplicationContext());
+        originalNote = null;
+        titleEdit = (EditText) findViewById(R.id.title_edit);
+        contentEdit = (EditText) findViewById(R.id.content_edit);
 
         menu_left = (ListView) findViewById(R.id.menu_left);
-        notes_left = new ArrayList<>();
-        notes_left.add(new Note("Title 1", "Content 1"));
-        notes_left.add(new Note("Title 2", "Content 2"));
-        NoteAdapter adapter_left = new NoteAdapter(this,notes_left);
+        adapter_left = new NoteAdapter(this, notesManager.getNotes());
         menu_left.setAdapter(adapter_left);
+
+//        menu_left = (ListView) findViewById(R.id.menu_left);
+//        notes_left = new ArrayList<>();
+//        notes_left.add(new Note("Title 1", "Content 1"));
+//        notes_left.add(new Note("Title 2", "Content 2"));
+//        NoteAdapter adapter_left = new NoteAdapter(this,notes_left);
+//        menu_left.setAdapter(adapter_left);
 
         menu_right = (ListView) findViewById(R.id.menu_right);
         notes_right = new ArrayList<>();
@@ -86,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.detector = new GestureDetectorCompat(this, new MyGesture());
 
 
-        mTextView.setOnTouchListener(new View.OnTouchListener() {
+        contentEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 detector.onTouchEvent(event);
@@ -101,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(String response) {
                 Toast.makeText(getApplicationContext(), "Note partagée sur le serveur", Toast.LENGTH_LONG).show();
-                mTextView.setText(response);
+                contentEdit.setText(response);
             }
         }, new Response.ErrorListener(){
             @Override
@@ -137,12 +147,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_new) {
+            createNewNote();
+            return true;
+        }
         if (id == R.id.action_save) {
+            saveNote();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void createNewNote() {
+        originalNote = null;
+        titleEdit.setText(null);
+        contentEdit.setText(null);
+    }
+
+    private void saveNote() {
+        originalNote = notesManager.createOrUpdate(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
+        adapter_left.notifyDataSetChanged();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -174,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (!TextUtils.isEmpty(string))
-            mTextView.setText("You have clicked "+ string);
+            contentEdit.setText("You have clicked "+ string);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -262,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         public void onBottomSwipe(){
+            saveNote();
             Toast.makeText(getApplicationContext(),"Note sauvegardée en mémoire locale", Toast.LENGTH_SHORT).show();
             choices.setVisibility(View.INVISIBLE);
         }
