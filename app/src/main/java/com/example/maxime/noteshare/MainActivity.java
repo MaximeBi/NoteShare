@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -26,16 +26,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public EditText mTextView;
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
-    public ListView menu_left_List; //MenuLeft
-    public ListView menur_right_List; //MenuRight
-    public ArrayList<Note> notes_left, notes_right;
+    public RelativeLayout screen;
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +52,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationrightView.setNavigationItemSelectedListener(this);
 
         mTextView = (EditText) findViewById(R.id.content_edit);
+
+        screen = (RelativeLayout) findViewById(R.id.window_id);
+
         this.detector = new GestureDetectorCompat(this, new MyGesture());
 
-        menu_left_List = (ListView) findViewById(R.id.menu_left);
-        notes_left = new ArrayList<>();
-        notes_left.add(new Note("title test", "context test"));
-        notes_left.add(new Note("title test2", "context test2"));
-        NoteAdapter adapter_left = new NoteAdapter(MainActivity.this, notes_left);
-        menu_left_List.setAdapter(adapter_left);
-
-        menur_right_List = (ListView) findViewById(R.id.menu_right);
-        notes_right = new ArrayList<>();
-        notes_right.add(new Note("title test3", "context test3"));
-        notes_right.add(new Note("title test4", "context test4"));
-        NoteAdapter adapter_right = new NoteAdapter(MainActivity.this, notes_right);
-        menur_right_List.setAdapter(adapter_right);
 
         mTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 string = "nav_slideshow";
                 break;
             case R.id.nav_manage:
-                string = "nav_manage";
+                string = "通知";
                 break;
             case R.id.nav_share:
                 string = "nav_share";
@@ -158,21 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 string = "nav_send";
                 break;
         }
-        /*
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-        */
         if (!TextUtils.isEmpty(string))
             mTextView.setText("You have clicked "+string);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -184,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         private static final int SWIPE_MIN_DISTANCE = 50;
         private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
+        }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
