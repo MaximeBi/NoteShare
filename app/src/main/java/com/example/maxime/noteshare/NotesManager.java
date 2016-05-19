@@ -13,6 +13,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kapil on 12/05/2016.
@@ -22,7 +24,7 @@ public class NotesManager {
     private static NotesManager instance = null;
     private static final String FOLDER_NAME = "NoteShare";
     private File folder;
-    private ArrayList<Note> notes;
+    private Map<String, Note> notes;
     private Context context;
 
     public NotesManager(Context context) {
@@ -30,7 +32,7 @@ public class NotesManager {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        notes = new ArrayList<Note>();
+        notes = new HashMap<String, Note>();
         this.context = context;
         loadNotesFromFolder();
     }
@@ -42,9 +44,29 @@ public class NotesManager {
         return instance;
     }
 
-    public void create(String title, String content) {
-        Note note = new Note(title, content);
-        notes.add(note);
+    public Note createOrUpdate(Note note) {
+        if(note.hasId()) {
+            return update(note);
+        } else {
+            return create(note);
+        }
+    }
+
+    private Note create(Note newNote) {
+        Note note = new Note(newNote);
+        notes.put(note.getId(), note);
+        createOrUpdateFile(note);
+        return note;
+    }
+
+    private Note update(Note updatedNote) {
+        Note note = notes.get(updatedNote.getId());
+        note.update(updatedNote);
+        createOrUpdateFile(note);
+        return note;
+    }
+
+    public void createOrUpdateFile(Note note) {
         try{
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(folder+File.separator+note.getId()+".ser")));
             oos.writeObject(note);
@@ -61,7 +83,8 @@ public class NotesManager {
         File[] directoryListing = folder.listFiles();
         if (directoryListing != null) {
             for (File note : directoryListing) {
-                notes.add(loadNote(note));
+                Note n = loadNote(note);
+                notes.put(n.getId(), n);
             }
         }
     }
@@ -88,7 +111,7 @@ public class NotesManager {
         return folder;
     }
 
-    public ArrayList<Note> getNotes() {
+    public Map<String, Note> getNotes() {
         return notes;
     }
 }
