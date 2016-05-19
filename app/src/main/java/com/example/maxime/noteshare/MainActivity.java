@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,11 +26,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public EditText mTextView;
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
+    public ListView menu_left_List; //MenuLeft
+    public ListView menur_right_List; //MenuRight
+    public ArrayList<Note> notes_left, notes_right;
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mTextView = (EditText) findViewById(R.id.content_edit);
         this.detector = new GestureDetectorCompat(this, new MyGesture());
+
+        menu_left_List = (ListView) findViewById(R.id.menu_left);
+        notes_left = new ArrayList<>();
+        notes_left.add(new Note("title test", "context test"));
+        notes_left.add(new Note("title test2", "context test2"));
+        NoteAdapter adapter_left = new NoteAdapter(MainActivity.this, notes_left);
+        menu_left_List.setAdapter(adapter_left);
+
+        menur_right_List = (ListView) findViewById(R.id.menu_right);
+        notes_right = new ArrayList<>();
+        notes_right.add(new Note("title test3", "context test3"));
+        notes_right.add(new Note("title test4", "context test4"));
+        NoteAdapter adapter_right = new NoteAdapter(MainActivity.this, notes_right);
+        menur_right_List.setAdapter(adapter_right);
 
         mTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -129,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 string = "nav_slideshow";
                 break;
             case R.id.nav_manage:
-                string = "通知";
+                string = "nav_manage";
                 break;
             case R.id.nav_share:
                 string = "nav_share";

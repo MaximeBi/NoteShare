@@ -37,7 +37,7 @@
             android:layout_height="35dp"
             android:layout_gravity="right"
             android:orientation="horizontal"
-            android:paddingLeft="100dp"
+            android:paddingLeft="60dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
             <ImageView
