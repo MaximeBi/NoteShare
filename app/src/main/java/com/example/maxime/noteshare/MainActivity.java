@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
+    public RelativeLayout screen;
     //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationrightView.setNavigationItemSelectedListener(this);
 
         mTextView = (EditText) findViewById(R.id.content_edit);
+
+        screen = (RelativeLayout) findViewById(R.id.window_id);
+
         this.detector = new GestureDetectorCompat(this, new MyGesture());
+
 
         mTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -138,21 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 string = "nav_send";
                 break;
         }
-        /*
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-        */
         if (!TextUtils.isEmpty(string))
             mTextView.setText("You have clicked "+string);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -164,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         private static final int SWIPE_MIN_DISTANCE = 50;
         private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
+        }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
