@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         queue = Volley.newRequestQueue(this);
-        String url = "http://192.168.1.58:8080";
+        String url = "http://172.25.12.95:8080";
 
         query = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
