@@ -39,25 +39,31 @@
     <LinearLayout
         android:id="@+id/choice_upload"
         android:orientation="vertical"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="200dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:visibility="invisible">
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HOST"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/host_save_button"
+            android:textStyle="bold"
+            android:textColor="#01579B"
             android:id="@+id/host"
             android:layout_gravity="center"/>
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOCAL"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/local_save_button"
+            android:textStyle="bold"
+            android:textColor="#E65100"
             android:id="@+id/local"
             android:layout_gravity="center" />
     </LinearLayout>

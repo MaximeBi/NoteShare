@@ -17,4 +17,8 @@
 
     <string name="note_created">La note a été créée</string>
     <string name="note_updated">La note a été mise à jour</string>
+
+    <string name="host_save_button">&#11014; SAVE ONLINE</string>
+    <string name="local_save_button">&#11015; SAVE LOCAL</string>
+
 </resources>

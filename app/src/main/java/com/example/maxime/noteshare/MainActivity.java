@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GestureDetectorCompat detector;
     public RequestQueue queue;
     public StringRequest query;
-    public RelativeLayout screen;
     public ListView menu_left, menu_right;
     public ArrayList<Note> notes_left, notes_right;
 
@@ -286,43 +285,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
             super.onLongPress(e);
-        }
-
-        /*@Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            boolean result = false;
-            try {
-                float diffY = e2.getY() - e1.getY();
-                float diffX = e2.getX() - e1.getX();
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                        if (diffX > 0) {
-                            onRightSwipe();
-                        } else {
-                            onLeftSwipe();
-                        }
-                    }
-                } else {
-                    if (Math.abs(diffY) > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                        if (diffY > 0) {
-                            onBottomSwipe();
-                        } else {
-                            onTopSwipe();
-                        }
-                    }
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-            return result;
-        }*/
-
-        public void onLeftSwipe(){
-            Toast.makeText(getApplicationContext(),"LEFT", Toast.LENGTH_SHORT).show();
-        }
-
-        public void onRightSwipe(){
-            Toast.makeText(getApplicationContext(),"RIGHT", Toast.LENGTH_SHORT).show();
         }
 
         public void onTopSwipe(){
