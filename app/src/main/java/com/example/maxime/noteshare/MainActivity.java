@@ -153,13 +153,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         query = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(), "Note partagée sur le serveur", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.enregistrement_online, Toast.LENGTH_LONG).show();
                 contentEdit.setText(response);
             }
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Erreur partage de la note", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.error_enregistrement, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -294,8 +294,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         public void onBottomSwipe(){
             saveNote();
-            Toast.makeText(getApplicationContext(),"Note sauvegardée en mémoire locale", Toast.LENGTH_SHORT).show();
-            choices.setVisibility(View.INVISIBLE);
+            //Toast.makeText(getApplicationContext(), R.string.enregistrement_local, Toast.LENGTH_SHORT).show();
+            //choices.setVisibility(View.INVISIBLE);
         }
     }
 }
