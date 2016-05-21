@@ -21,7 +21,6 @@ import android.widget.ListView;
 
 import android.widget.LinearLayout;
 
-import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -45,13 +44,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private EditText titleEdit;
     public EditText contentEdit;
     private GestureDetectorCompat detector;
-    public RequestQueue queue;
-    public StringRequest query;
+
     public ListView menu_left, menu_right;
     public ArrayList<Note> notes_left, notes_right;
 
     public LinearLayout choices;
     private NoteAdapter adapter_left;
+
+    private RequestQueue queue;
+    private StringRequest query;
 
 
     @Override
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         originalNote = null;
         titleEdit = (EditText) findViewById(R.id.title_edit);
         contentEdit = (EditText) findViewById(R.id.content_edit);
+
 
         menu_left = (ListView) findViewById(R.id.menu_left);
         //adapter_left = new NoteAdapter(this, notesManager.getNotes());
@@ -138,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         this.detector = new GestureDetectorCompat(this, new MyGesture());
 
-
         contentEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -147,22 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        queue = Volley.newRequestQueue(this);
-        String url = "http://172.25.12.95:8080";
-
-        query = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(), R.string.enregistrement_online, Toast.LENGTH_LONG).show();
-                contentEdit.setText(response);
-            }
-        }, new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), R.string.error_enregistrement, Toast.LENGTH_LONG).show();
-            }
-        });
-
+        this.queue = Volley.newRequestQueue(this);
     }
 
 
@@ -284,18 +270,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     onBottomSwipe();
                 }
             });
+
             super.onLongPress(e);
         }
 
         public void onTopSwipe(){
+
+            Note n = new Note("noteTest","Bonjour, ceci est un test");
+
+            SenderJSon final_url = new SenderJSon(n,"192.168.1.58","8080");
+
+            query = new StringRequest(Request.Method.GET, final_url.constructQuery(), new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Toast.makeText(getApplicationContext(), R.string.enregistrement_online, Toast.LENGTH_SHORT).show();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), R.string.error_enregistrement, Toast.LENGTH_SHORT).show();
+                }
+            });
+
             queue.add(query);
+
             choices.setVisibility(View.INVISIBLE);
         }
 
         public void onBottomSwipe(){
             saveNote();
-            //Toast.makeText(getApplicationContext(), R.string.enregistrement_local, Toast.LENGTH_SHORT).show();
-            //choices.setVisibility(View.INVISIBLE);
+            Toast.makeText(getApplicationContext(), R.string.enregistrement_local, Toast.LENGTH_SHORT).show();
+
+            choices.setVisibility(View.INVISIBLE);
         }
     }
 }
