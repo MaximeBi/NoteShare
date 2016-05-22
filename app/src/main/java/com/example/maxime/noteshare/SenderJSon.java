@@ -1,6 +1,4 @@
 package com.example.maxime.noteshare;
-
-import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
@@ -40,8 +38,10 @@ public class SenderJSon {
     }
 
     public String noteToJSon(Note n){
+
         Gson gson = new Gson();
         String s = "";
+        s = gson.toJson(n);
         try{
             s = URLEncoder.encode(gson.toJson(n), "UTF-8");
         }catch (UnsupportedEncodingException e){
