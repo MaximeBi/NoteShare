@@ -28,10 +28,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -282,6 +284,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             SenderJSon final_url = new SenderJSon(n,"192.168.1.58","8080");
 
+            String url = "http://192.168.1.58:8080";
+
+            try{
+                JSONObject objet = new JSONObject("{\"type\":\"example\"}");
+
+                JsonObjectRequest toto = new JsonObjectRequest(url, objet, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getApplicationContext(), R.string.enregistrement_online, Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), R.string.error_enregistrement, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                queue.add(toto);
+
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+
+
             query = new StringRequest(Request.Method.GET, final_url.constructQuery(), new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -293,8 +319,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(getApplicationContext(), R.string.error_enregistrement, Toast.LENGTH_SHORT).show();
                 }
             });
-
-            queue.add(query);
 
             choices.setVisibility(View.INVISIBLE);
         }
