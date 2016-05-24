@@ -51,9 +51,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public ListView menu_left, menu_right;
     public ArrayList<Note> notes_left, notes_right;
+    public ArrayList<HashMap<String, Object>> listItem;
 
     public LinearLayout choices;
-    private NoteAdapter adapter_left;
+    private SimpleAdapter adapter_left;
 
     private RequestQueue queue;
     private StringRequest query;
@@ -78,16 +79,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationrightView.setNavigationItemSelectedListener(this);
 
         notesManager = NotesManager.getInstance(getApplicationContext());
-        originalNote = null;
+        originalNote = new Note();
         titleEdit = (EditText) findViewById(R.id.title_edit);
         contentEdit = (EditText) findViewById(R.id.content_edit);
 
-
         menu_left = (ListView) findViewById(R.id.menu_left);
-        //adapter_left = new NoteAdapter(this, notesManager.getNotes());
-        //menu_left.setAdapter(adapter_left);
         notes_left = new ArrayList<>();
-        ArrayList<HashMap<String, Object>> listItem = new ArrayList<>();
+        listItem = new ArrayList<>();
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("hh:mm");
@@ -100,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         for(int i=0;i<5;i++)
         {
-            notes_left.add(new Note("title"+i, "content"+i));
+            notes_left.add(new Note("title" + i, "content" + i));
             HashMap<String, Object> map = new HashMap<>();
             map.put("ItemImage", R.mipmap.note_share_icon);
             map.put("ItemTitle", notes_left.get(i).getTitle());
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             String date = null;
-            if(today != null && lastUpdate.compareTo(today)==0){
+            if(lastUpdate != null && today != null && lastUpdate.compareTo(today)==0){
                 date = format2.format(notes_left.get(i).getLastUpdate());
             }
             else if(today != null){
@@ -122,12 +120,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             listItem.add(map);
         }
 
-        SimpleAdapter adapter_left = new SimpleAdapter(this,listItem, R.layout.element_note,
+        adapter_left = new SimpleAdapter(this,listItem, R.layout.element_note,
                 new String[] {"ItemImage","ItemTitle", "ItemText"},
                 new int[] {R.id.ItemImage,R.id.ItemTitle,R.id.ItemText}
         );
 
-        menu_left.setAdapter(adapter_left);//为ListView绑定适配器
+        menu_left.setAdapter(adapter_left);
 
 //        menu_left = (ListView) findViewById(R.id.menu_left);
 //        NoteAdapter adapter_left = new NoteAdapter(this,notes_left);
@@ -175,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar item clicks here. The action bar w
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
@@ -199,10 +197,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void saveNote() {
+        System.out.println("Note "+ originalNote);
+        System.out.println("Title "+ titleEdit.getText().toString());
+        System.out.println("Content "+ contentEdit.getText().toString());
+        System.out.println(contentEdit.getText());
+        originalNote.setLastUpdate(new Date());
         originalNote = notesManager.createOrUpdate(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("ItemImage", R.mipmap.note_share_icon);
+        map.put("ItemTitle", originalNote.getTitle());
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format2 = new SimpleDateFormat("hh:mm");
+        Date lastUpdate = null;
+        try {
+            lastUpdate = format.parse(format.format(originalNote.getLastUpdate()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date today = new Date();
+        String date = null;
+        if(lastUpdate != null && today != null && lastUpdate.compareTo(today)==0){
+            date = format2.format(originalNote.getLastUpdate());
+        }
+        else if(today != null){
+            date = format.format(lastUpdate);
+        }
+        map.put("ItemText", date);
+        listItem.add(map);
         adapter_left.notifyDataSetChanged();
+        System.out.println(adapter_left);
+        //adapter_left.add(map);
     }
 
+    //pour des version de navigation view
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -221,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 string = "nav_slideshow";
                 break;
             case R.id.nav_manage:
-                string = "通知";
+                string = "nav_manage";
                 break;
             case R.id.nav_share:
                 string = "nav_share";
