@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -86,9 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menu_left = (ListView) findViewById(R.id.menu_left);
         notes_left = new ArrayList<>();
         listItem = new ArrayList<>();
-
+        /*
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("hh:mm");
+
         Date today = null;
         try {
             today = format.parse(format.format(new Date()));
@@ -119,13 +121,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             map.put("ItemText", date);
             listItem.add(map);
         }
-
+        */
         adapter_left = new SimpleAdapter(this,listItem, R.layout.element_note,
                 new String[] {"ItemImage","ItemTitle", "ItemText"},
                 new int[] {R.id.ItemImage,R.id.ItemTitle,R.id.ItemText}
         );
 
         menu_left.setAdapter(adapter_left);
+        menu_left.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> listView, View itemView, int itemPosition, long itemId)
+            {
+                HashMap entry = (HashMap)listView.getAdapter().getItem(itemPosition);
+                System.out.println("entry " + entry.toString());
+                Note entry_note = notes_left.get(itemPosition);
+                originalNote = entry_note;
+                System.out.println(titleEdit.getText());
+                titleEdit.setText(entry_note.getTitle().toCharArray(), 0, entry_note.getTitle().length());
+                System.out.println(titleEdit.getText());
+                System.out.println(contentEdit.getText());
+                contentEdit.setText(entry_note.getContent());
+                System.out.println(contentEdit.getText());
+            }
+        });
+
 
 //        menu_left = (ListView) findViewById(R.id.menu_left);
 //        NoteAdapter adapter_left = new NoteAdapter(this,notes_left);
@@ -191,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void createNewNote() {
-        originalNote = null;
+        originalNote = new Note();
         titleEdit.setText(null);
         contentEdit.setText(null);
     }
@@ -225,8 +243,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         map.put("ItemText", date);
         listItem.add(map);
+        notes_left.add(originalNote);
         adapter_left.notifyDataSetChanged();
         System.out.println(adapter_left);
+        originalNote = new Note();
         //adapter_left.add(map);
     }
 
