@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private NotesManager notesManager;
     private Note originalNote;
     private EditText titleEdit;
-    public EditText contentEdit;
+    private EditText contentEdit;
     private GestureDetectorCompat detector;
 
-    public ListView menu_left, menu_right;
+    private ListView menu_left, menu_right;
     private ArrayList<Note> notes_right;
 
     private NoteAdapter localAdapter;
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         contentEdit = (EditText) findViewById(R.id.content_edit);
 
         menu_left = (ListView) findViewById(R.id.menu_left);
-        ArrayList<Note> n = notesManager.getNotes();
         localAdapter = new NoteAdapter(getApplicationContext(), notesManager.getNotes());
 
         menu_left.setAdapter(localAdapter);
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         NoteAdapter adapter_right = new NoteAdapter(this,notes_right);
         menu_right.setAdapter(adapter_right);
 
-        this.detector = new GestureDetectorCompat(this, new GestureDector(this));
+        this.detector = new GestureDetectorCompat(this, new GestureDetector(this));
 
         contentEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
