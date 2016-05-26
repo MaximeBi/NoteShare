@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Note implements Serializable {
+public class Note implements Serializable, Comparable<Note> {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -158,5 +158,10 @@ public class Note implements Serializable {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @Override
+    public int compareTo(Note another) {
+        return another.lastUpdate.compareTo(lastUpdate);
     }
 }

@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         menu_left = (ListView) findViewById(R.id.menu_left);
         localAdapter = new NoteAdapter(getApplicationContext(), notesManager.getNotes());
-
         menu_left.setAdapter(localAdapter);
         menu_left.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

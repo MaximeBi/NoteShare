@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class NoteAdapter extends ArrayAdapter<Note> {
@@ -22,8 +23,15 @@ public class NoteAdapter extends ArrayAdapter<Note> {
     public NoteAdapter(Context context, ArrayList<Note> data) {
         super(context, R.layout.activity_main, data);
         this.data = data;
+        Collections.sort(this.data);
         this.context=context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        Collections.sort(this.data);
+        super.notifyDataSetChanged();
     }
 
     @Override
