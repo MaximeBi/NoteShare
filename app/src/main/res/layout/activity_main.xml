@@ -24,7 +24,61 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/nav_header_left_main" />
+            <include layout="@layout/viewpage" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp"
+                android:layout_width="0dp"
+                android:layout_height="0dp">
+
+            </android.support.v4.view.ViewPager>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/colorAccent"
+                android:gravity="bottom"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+                <LinearLayout
+                    android:background="@color/colorAccent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+                    <ImageView
+                        android:id="@+id/searchView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:src="@mipmap/ic_search"
+                        android:clickable="true"
+                        android:adjustViewBounds="true"
+                        android:maxWidth="25dip"
+                        android:maxHeight="25dip"
+                        android:padding="0dip" />
+
+                    <EditText
+                        android:id="@+id/text_search"
+                        android:layout_weight="1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center"
+                        android:gravity="left"
+                        android:hint="Input key words"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:paddingTop="0dp" />
+
+                </LinearLayout>
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/menu_left"
@@ -33,27 +87,5 @@
                 android:layout_weight="1" />
         </LinearLayout>
     </android.support.design.widget.NavigationView>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_right_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:fitsSystemWindows="true">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include layout="@layout/nav_header_right_main" />
-
-            <ListView
-                android:id="@+id/menu_right"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </android.support.design.widget.NavigationView>
-
 
 </android.support.v4.widget.DrawerLayout>

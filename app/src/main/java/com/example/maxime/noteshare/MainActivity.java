@@ -1,19 +1,25 @@
 package com.example.maxime.noteshare;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,7 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private ListView menu_left, menu_right;
     private ArrayList<Note> notes_right;
 
-    private NoteAdapter localAdapter;
+    private NoteAdapter localAdapter, adapter_right;
+
+    private ViewPager mPageVp;
+    private ImageView mTabLineIv;
+    private TextView tab_local, tab_share;
+    private int currentIndex;
+    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +60,34 @@ public class MainActivity extends AppCompatActivity {
         titleEdit = (EditText) findViewById(R.id.title_edit);
         contentEdit = (EditText) findViewById(R.id.content_edit);
 
+
+        mPageVp = (ViewPager) findViewById(R.id.vp);
+        tab_local = (TextView) findViewById(R.id.id_local);
+        tab_local.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPageVp.setCurrentItem(0);
+                menu_left.setAdapter(localAdapter);
+                tab_local.setTextColor(Color.WHITE);
+                tab_share.setTextColor(Color.GRAY);
+            }
+        });
+        tab_share = (TextView) findViewById(R.id.id_share);
+        tab_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPageVp.setCurrentItem(1);
+                menu_left.setAdapter(adapter_right);
+                tab_share.setTextColor(Color.WHITE);
+                tab_local.setTextColor(Color.GRAY);
+            }
+        });
+        mTabLineIv = (ImageView) findViewById(R.id.id_tab_line_iv);
+
         menu_left = (ListView) findViewById(R.id.menu_left);
         localAdapter = new NoteAdapter(getApplicationContext(), notesManager.getNotes());
         menu_left.setAdapter(localAdapter);
+
         menu_left.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -58,12 +95,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        menu_right = (ListView) findViewById(R.id.menu_right);
         notes_right = new ArrayList<>();
         notes_right.add(new Note("Title 3", "Content 3"));
         notes_right.add(new Note("Title 4", "Content 4"));
-        NoteAdapter adapter_right = new NoteAdapter(this,notes_right);
-        menu_right.setAdapter(adapter_right);
+        adapter_right = new NoteAdapter(this,notes_right);
 
         this.detector = new GestureDetectorCompat(this, new GestureDetector(this));
 
@@ -74,7 +109,40 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        mPageVp.setOnPageChangeListener(new OnPageChangeListener() {
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+            @Override
+            public void onPageScrolled(int position, float offset, int offsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                tab_local.setTextColor(Color.GRAY);
+                tab_share.setTextColor(Color.GRAY);
+                switch (position) {
+                    case 0:
+                        tab_local.setTextColor(Color.WHITE);
+                        break;
+                    case 1:
+                        tab_share.setTextColor(Color.WHITE);
+                        break;
+                }
+                currentIndex = position;
+            }
+        });
+
+        DisplayMetrics dpMetrics = new DisplayMetrics();
+        getWindow().getWindowManager().getDefaultDisplay().getMetrics(dpMetrics);
+        screenWidth = dpMetrics.widthPixels;
     }
+
 
     @Override
     public void onBackPressed() {
