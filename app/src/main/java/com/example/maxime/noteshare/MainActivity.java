@@ -204,11 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void onTopSwipe(){
 
-            Note n = new Note("noteTest","Bonjour, ceci est un test");
-
             SenderJSon final_url = new SenderJSon(originalNote,"172.25.12.95","8080");
-
-            String url = "http://172.25.12.95:8080";
 
             try{
                 JSONObject objet = new JSONObject(final_url.noteToJSon());
