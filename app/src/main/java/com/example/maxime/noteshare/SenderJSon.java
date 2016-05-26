@@ -10,11 +10,11 @@ import java.net.URLEncoder;
 public class SenderJSon {
 
     private Note n;
-    private String ipAdresse;
-    private String port;
+    private static final String IP_ADRESS = "172.25.12.95";
+    private static final String PORT = "8080";
 
     public String getIpAdresse(){
-        return this.ipAdresse;
+        return IP_ADRESS;
     }
 
     public Note getNote(){
@@ -22,14 +22,11 @@ public class SenderJSon {
     }
 
     public String getPort(){
-        return this.port;
+        return this.PORT;
     }
 
-
-    public SenderJSon(Note n, String URL, String port){
+    public SenderJSon(Note n){
         this.n = n;
-        this.ipAdresse = URL;
-        this.port = port;
     }
 
     public String getFinalUrl(){

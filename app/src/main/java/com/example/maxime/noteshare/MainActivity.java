@@ -7,31 +7,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-
 import android.widget.ListView;
-
-import android.widget.LinearLayout;
-
 import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -46,12 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public ListView menu_left, menu_right;
     private ArrayList<Note> notes_right;
 
-    public LinearLayout choices;
     private NoteAdapter localAdapter;
-
-    private RequestQueue queue;
-    private StringRequest query;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        notesManager = NotesManager.getInstance(getApplicationContext());
+        notesManager = NotesManager.getInstance();
         originalNote = null;
         titleEdit = (EditText) findViewById(R.id.title_edit);
         contentEdit = (EditText) findViewById(R.id.content_edit);
@@ -84,14 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         menu_right = (ListView) findViewById(R.id.menu_right);
         notes_right = new ArrayList<>();
-        notes_right.add(new Note("Title 3","Content 3"));
-        notes_right.add(new Note("Title 4","Content 4"));
+        notes_right.add(new Note("Title 3", "Content 3"));
+        notes_right.add(new Note("Title 4", "Content 4"));
         NoteAdapter adapter_right = new NoteAdapter(this,notes_right);
         menu_right.setAdapter(adapter_right);
 
-        choices = (LinearLayout) findViewById(R.id.choice_upload);
-
-        this.detector = new GestureDetectorCompat(this, new MyGesture());
+        this.detector = new GestureDetectorCompat(this, new GestureDector(this));
 
         contentEdit.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -100,10 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        this.queue = Volley.newRequestQueue(this);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -141,14 +114,24 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void showMessage(int id) {
+        Toast.makeText(getApplicationContext(), id, Toast.LENGTH_SHORT).show();
+    }
+
     private void createNewNote() {
         originalNote = null;
         titleEdit.setText(null);
         contentEdit.setText(null);
     }
 
-    private void saveNote() {
-        originalNote = notesManager.createOrUpdate(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
+    public void saveNote() {
+        if(originalNote == null) {
+            originalNote = notesManager.create(titleEdit.getText().toString(), contentEdit.getText().toString());
+            showMessage(R.string.note_created);
+        } else {
+            originalNote = notesManager.update(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
+            showMessage(R.string.note_updated);
+        }
         localAdapter.notifyDataSetChanged();
     }
 
@@ -162,79 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class MyGesture extends GestureDetector.SimpleOnGestureListener{
-
-        private static final int SWIPE_MIN_DISTANCE = 50;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-        private boolean onTouch = false;
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            if(onTouch){
-                choices.setVisibility(View.INVISIBLE);
-                this.onTouch = false;
-            }
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            this.onTouch = true;
-            choices.setVisibility(View.VISIBLE);
-
-            Button send_host = (Button) findViewById(R.id.host);
-            Button send_local = (Button) findViewById(R.id.local);
-
-            send_host.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onTopSwipe();
-                }
-            });
-
-            send_local.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBottomSwipe();
-                }
-            });
-
-            super.onLongPress(e);
-        }
-
-        public void onTopSwipe(){
-
-            SenderJSon final_url = new SenderJSon(originalNote,"172.25.12.95","8080");
-
-            try{
-                JSONObject objet = new JSONObject(final_url.noteToJSon());
-
-                JsonObjectRequest toto = new JsonObjectRequest(final_url.getFinalUrl(), objet, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(), R.string.enregistrement_online, Toast.LENGTH_SHORT).show();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), R.string.error_enregistrement, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                queue.add(toto);
-
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-
-            choices.setVisibility(View.INVISIBLE);
-        }
-
-        public void onBottomSwipe(){
-            saveNote();
-            Toast.makeText(getApplicationContext(), R.string.enregistrement_local, Toast.LENGTH_SHORT).show();
-
-            choices.setVisibility(View.INVISIBLE);
-        }
+    public Note getOriginalNote() {
+        return originalNote;
     }
 }
