@@ -32,21 +32,15 @@ public class SenderJSon {
         this.port = port;
     }
 
-    public String constructQuery(){
-        String url = "http://" + getIpAdresse() + ":" + getPort() + "/" + noteToJSon(getNote());
+    public String getFinalUrl(){
+        String url = "http://" + getIpAdresse() + ":" + getPort();
         return url;
     }
 
-    public String noteToJSon(Note n){
-
+    public String noteToJSon(){
         Gson gson = new Gson();
         String s = "";
         s = gson.toJson(n);
-        try{
-            s = URLEncoder.encode(gson.toJson(n), "UTF-8");
-        }catch (UnsupportedEncodingException e){
-            e.printStackTrace();
-        }
         return s;
     }
 }

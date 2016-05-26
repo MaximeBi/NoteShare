@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class NotesManager {
     private ArrayList<Note> notes;
     private Context context;
 
-    public NotesManager(Context context) {
+    private NotesManager(Context context) {
         folder = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
         if (!folder.exists()) {
             folder.mkdirs();
@@ -59,6 +60,7 @@ public class NotesManager {
     private Note update(Note originalNote, String title, String content) {
         originalNote.setTitle(title);
         originalNote.setContent(content);
+        originalNote.setLastUpdate(new Date());
         createOrUpdateFile(originalNote, R.string.note_updated);
         return originalNote;
     }
@@ -76,7 +78,7 @@ public class NotesManager {
         }
     }
 
-    public void loadNotesFromFolder() {
+    private void loadNotesFromFolder() {
         File[] directoryListing = folder.listFiles();
         if (directoryListing != null) {
             for (File note : directoryListing) {
@@ -86,7 +88,7 @@ public class NotesManager {
         }
     }
 
-    public Note loadNote(File file) {
+    private Note loadNote(File file) {
         Note note = null;
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
@@ -102,10 +104,6 @@ public class NotesManager {
             e.printStackTrace();
         }
         return note;
-    }
-
-    public File getFolder() {
-        return folder;
     }
 
     public ArrayList<Note> getNotes() {

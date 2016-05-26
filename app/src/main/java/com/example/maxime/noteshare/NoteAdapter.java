@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.FieldPosition;
@@ -47,23 +48,19 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*
-        View vi = convertView;
-        if (vi == null) {
-            vi = inflater.inflate(R.layout.activity_main, parent, false);
-        }
-        LayoutInflater inflater = context.getLayoutInflater();
-        */
-        View vi = inflater.inflate(R.layout.element_list_note, null, true);
+        View vi = inflater.inflate(R.layout.element_note, null, true);
         if (!data.isEmpty()) {
             Note note =  data.get(position);
 
-            TextView text = (TextView) vi.findViewById(R.id.note_title);
-            text.setText(note.getTitle());
+            ImageView imageView = (ImageView) vi.findViewById(R.id.ItemImage);
+            imageView.setImageResource(R.mipmap.note_share_icon);
 
-            TextView date = (TextView) vi.findViewById(R.id.note_date);
+            TextView title = (TextView) vi.findViewById(R.id.ItemTitle);
+            title.setText(note.getTitle());
+
+            TextView date = (TextView) vi.findViewById(R.id.ItemText);
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat format2 = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
             try {
                 Date lastUpdate = format.parse(format.format(note.getLastUpdate()));
                 Date today = format.parse(format.format(new Date()));
