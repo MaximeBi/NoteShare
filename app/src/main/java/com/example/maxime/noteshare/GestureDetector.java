@@ -25,7 +25,6 @@ public class GestureDetector extends android.view.GestureDetector.SimpleOnGestur
 
     public GestureDetector(MainActivity activity) {
         this.activity = activity;
-        this.queue = Volley.newRequestQueue(activity);
         this.choices = (LinearLayout) activity.findViewById(R.id.choice_upload);
     }
 
@@ -64,28 +63,7 @@ public class GestureDetector extends android.view.GestureDetector.SimpleOnGestur
     }
 
     public void onTopSwipe(){
-
-        SenderJSon final_url = new SenderJSon(activity.getOriginalNote());
-
-        try{
-            JsonObjectRequest toto = new JsonObjectRequest(final_url.getFinalUrl(), new JSONObject(final_url.noteToJSon()), new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    activity.showMessage(R.string.enregistrement_online);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    activity.showMessage(R.string.error_enregistrement);
-                }
-            });
-
-            queue.add(toto);
-
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-
+        activity.sendNote();
         choices.setVisibility(View.INVISIBLE);
     }
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private NotesManager notesManager;
+    private ServerManager serverManager;
     private Note originalNote;
     private EditText titleEdit;
     private EditText contentEdit;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        serverManager = ServerManager.getInstance();
+        serverManager.loadNotesFromServer(this);
         notesManager = NotesManager.getInstance();
         originalNote = null;
         titleEdit = (EditText) findViewById(R.id.title_edit);
@@ -211,7 +214,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Note getOriginalNote() {
-        return originalNote;
+    public void sendNote() {
+        if(originalNote != null) {
+            serverManager.sendNote(originalNote, this, new Runnable() {
+                @Override
+                public void run() {
+                    showMessage(R.string.enregistrement_online);
+                }
+            }, new Runnable() {
+                @Override
+                public void run() {
+                    showMessage(R.string.error_enregistrement);
+                }
+            });
+        }
     }
 }
