@@ -21,26 +21,45 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="10dip" >
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/nav_header_vertical_spacing"
-                android:src="@mipmap/note_local" />
-
-            <TextView
-                android:id="@+id/id_local"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:text="Local"
-                android:textColor="#FFFFFFFF"
-                android:textSize="20dip"
-                android:paddingTop="15dp" />
+                >
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:src="@mipmap/note_local" />
+
+                <TextView
+                    android:id="@+id/id_local"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Local"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="20dip"
+                    android:paddingTop="15dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/tab_line1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:contentDescription="tab1"
+                android:background="#ffffff">
+            </ImageView>
+
         </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/id_tab_2"
@@ -49,41 +68,46 @@
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="10dip"
             android:saveEnabled="false" >
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/nav_header_vertical_spacing"
-                android:src="@mipmap/note_share" />
-
-            <TextView
-                android:id="@+id/id_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:text="Share"
-                android:textColor="#80808080"
-                android:textSize="20dip"
-                android:paddingTop="15dp" />
+                >
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:src="@mipmap/note_share" />
+
+                <TextView
+                    android:id="@+id/id_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Share"
+                    android:textColor="#80808080"
+                    android:textSize="20dip"
+                    android:paddingTop="15dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/tab_line2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:contentDescription="tab2"
+                android:background="@color/colorAccent">
+            </ImageView>
+
         </LinearLayout>
 
     </LinearLayout>
-
-
-    <ImageView
-        android:id="@+id/id_tab_line_iv"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:contentDescription="tab">
-    </ImageView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#000000" />
 
 </LinearLayout>
