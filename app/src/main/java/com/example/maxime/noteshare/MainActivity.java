@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        serverManager = ServerManager.getInstance();
-        serverManager.loadNotesFromServer(this);
-        notesManager = NotesManager.getInstance();
+        serverManager = ServerManager.getInstance(this);
+        serverManager.loadNotesFromServer();
+        notesManager = NotesManager.getInstance(this);
         originalNote = null;
         titleEdit = (EditText) findViewById(R.id.title_edit);
         contentEdit = (EditText) findViewById(R.id.content_edit);
@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -187,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendNote() {
         if(originalNote != null) {
-            serverManager.sendNote(originalNote, this);
+            serverManager.sendNote(originalNote);
         }
     }
 
@@ -196,6 +194,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNotesFromServer() {
-        serverManager.loadNotesFromServer(this);
+        serverManager.loadNotesFromServer();
     }
 }

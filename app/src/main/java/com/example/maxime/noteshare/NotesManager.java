@@ -1,5 +1,7 @@
 package com.example.maxime.noteshare;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 import java.io.File;
@@ -19,25 +21,36 @@ public class NotesManager {
     private static final String FOLDER_NAME = "NoteShare";
     private File folder;
     private ArrayList<Note> notes;
+    private MainActivity activity;
 
-    private NotesManager() {
+    private NotesManager(MainActivity activity) {
         folder = new File(Environment.getExternalStorageDirectory(), FOLDER_NAME);
         if (!folder.exists()) {
             folder.mkdirs();
         }
         notes = new ArrayList<>();
+        this.activity = activity;
         loadNotesFromFolder();
     }
 
-    public static NotesManager getInstance() {
+    public static NotesManager getInstance(MainActivity activity) {
         if(instance == null) {
-            instance = new NotesManager();
+            instance = new NotesManager(activity);
         }
         return instance;
     }
 
+    private String getLogin() {
+        SharedPreferences sharedPref = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        return sharedPref.getString(activity.getString(R.string.login_setting), null);
+    }
+
     public Note create(String title, String content) {
         Note note = new Note(title, content);
+        String login = getLogin();
+        if(login != null) {
+            note.setAuthor(login);
+        }
         notes.add(note);
         createOrUpdateFile(note);
         return note;
@@ -49,6 +62,18 @@ public class NotesManager {
         originalNote.setLastUpdate(new Date());
         createOrUpdateFile(originalNote);
         return originalNote;
+    }
+
+    public boolean deleteNotes(ArrayList<Note> notesToDelete) {
+        for(Note n : notesToDelete) {
+            deleteFile(n);
+        }
+        return notes.removeAll(notesToDelete);
+    }
+
+    private void deleteFile(Note note) {
+        File file = new File(folder+File.separator+note.getId()+".ser");
+        file.delete();
     }
 
     private void createOrUpdateFile(Note note) {
@@ -97,8 +122,16 @@ public class NotesManager {
         }
     }
 
-    //TODO search by keywords
     public ArrayList<Note> getNotes(String keywords) {
+        if(keywords != null && !keywords.isEmpty()) {
+            ArrayList<Note> filtered = new ArrayList<Note>();
+            for (Note n : notes) {
+                if (n.getTitle().contains(keywords) || n.getKeywords().contains(keywords)) {
+                    filtered.add(n);
+                }
+            }
+            return filtered;
+        }
         return notes;
     }
 

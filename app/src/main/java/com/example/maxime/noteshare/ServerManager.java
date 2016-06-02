@@ -32,24 +32,26 @@ public class ServerManager {
     private String url;
     private static ServerManager instance = null;
     private ArrayList<Note> notes;
+    private MainActivity activity;
 
-    private ServerManager() {
+    private ServerManager(MainActivity activity) {
         this.url = "http://" + IP_ADDRESS + ":" + PORT;
+        this.activity = activity;
     }
 
-    public static ServerManager getInstance() {
+    public static ServerManager getInstance(MainActivity activity) {
         if(instance == null) {
-            instance = new ServerManager();
+            instance = new ServerManager(activity);
         }
         return instance;
     }
 
-    private boolean hasLogin(final MainActivity activity) {
-        if(getLogin(activity) == null) {
-            createLoginDialog(activity, new Runnable() {
+    private boolean hasLogin() {
+        if(getLogin() == null) {
+            createLoginDialog(new Runnable() {
                 @Override
                 public void run() {
-                    loadNotesFromServer(activity);
+                    loadNotesFromServer();
                 }
             }).show();
             return false;
@@ -57,8 +59,8 @@ public class ServerManager {
         return true;
     }
 
-    public void sendNote(Note note, final MainActivity activity) {
-         if(hasLogin(activity)) {
+    public void sendNote(Note note) {
+         if(hasLogin()) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(toJson(note)), new Response.Listener<JSONObject>() {
@@ -79,10 +81,10 @@ public class ServerManager {
         }
     }
 
-    public void loadNotesFromServer(final MainActivity activity, String parameters) {
-        if(hasLogin(activity)) {
+    public void loadNotesFromServer(String parameters) {
+        if(hasLogin()) {
             String keywords = "";
-            String login = "/login/"+getLogin(activity);
+            String login = "/login/"+getLogin();
             if(parameters != null && !parameters.isEmpty()) {
                 keywords = "/keywords/" + parameters.replaceAll(" ", ",");
             }
@@ -102,16 +104,16 @@ public class ServerManager {
         }
     }
 
-    public void loadNotesFromServer(final MainActivity activity) {
-        loadNotesFromServer(activity, null);
+    public void loadNotesFromServer() {
+        loadNotesFromServer(null);
     }
 
-    private String getLogin(MainActivity activity) {
+    private String getLogin() {
         SharedPreferences sharedPref = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         return sharedPref.getString(activity.getString(R.string.login_setting), null);
     }
 
-    private void setLogin(String login, MainActivity activity) {
+    private void setLogin(String login) {
         SharedPreferences sharedPref = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(activity.getString(R.string.login_setting), login);
@@ -119,7 +121,7 @@ public class ServerManager {
         activity.updateAuthor(login);
     }
 
-    private Dialog createLoginDialog(final MainActivity activity, final Runnable runnable) {
+    private Dialog createLoginDialog(final Runnable runnable) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.login_dialog);
@@ -133,7 +135,7 @@ public class ServerManager {
 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
-                setLogin(input.getText().toString(), activity);
+                setLogin(input.getText().toString());
                 runnable.run();
                 return;
             }
