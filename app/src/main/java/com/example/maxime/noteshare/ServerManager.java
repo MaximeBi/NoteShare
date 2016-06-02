@@ -37,6 +37,10 @@ public class ServerManager {
     private ServerManager(MainActivity activity) {
         this.url = "http://" + IP_ADDRESS + ":" + PORT;
         this.activity = activity;
+        this.notes = new ArrayList<Note>();
+        notes.add(new Note("server 1", "content 1"));
+        notes.add(new Note("server 2", "content 2"));
+        loadNotesFromServer();
     }
 
     public static ServerManager getInstance(MainActivity activity) {
@@ -162,7 +166,9 @@ public class ServerManager {
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<Note>>() {
         }.getType();
-        notes = gson.fromJson(n, listType);
+        ArrayList<Note> loaded = gson.fromJson(n, listType);
+        notes.clear();
+        notes.addAll(loaded);
     }
 
     public ArrayList<Note> getNotes() {

@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:baselineAligned="false"
-        >
+        android:baselineAligned="false" >
 
         <LinearLayout
             android:id="@+id/id_tab_l"
@@ -28,15 +27,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                >
+                android:gravity="center" >
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/local_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/nav_header_vertical_spacing"
-                    android:src="@mipmap/note_local" />
+                    android:src="@drawable/ic_sd_storage_white_36dp" />
 
                 <TextView
                     android:id="@+id/id_local"
@@ -76,15 +74,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                >
+                android:gravity="center" >
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/server_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/nav_header_vertical_spacing"
-                    android:src="@mipmap/note_share" />
+                    android:src="@drawable/ic_storage_black_36dp" />
 
                 <TextView
                     android:id="@+id/id_share"
