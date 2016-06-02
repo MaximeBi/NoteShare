@@ -91,6 +91,17 @@ public class NotesManager {
         return note;
     }
 
+    public void updateNotesAuthor(String author) {
+        for(Note note : notes) {
+            note.setAuthor(author);
+        }
+    }
+
+    //TODO search by keywords
+    public ArrayList<Note> getNotes(String keywords) {
+        return notes;
+    }
+
     public ArrayList<Note> getNotes() {
         return notes;
     }

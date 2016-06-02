@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 TabLine2.setBackgroundColor(Color.WHITE);
                 tab_local.setTextColor(Color.GRAY);
                 TabLine1.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                loadNotesFromServer();
             }
         });
 
@@ -186,17 +187,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendNote() {
         if(originalNote != null) {
-            serverManager.sendNote(originalNote, this, new Runnable() {
-                @Override
-                public void run() {
-                    showMessage(R.string.enregistrement_online);
-                }
-            }, new Runnable() {
-                @Override
-                public void run() {
-                    showMessage(R.string.error_enregistrement);
-                }
-            });
+            serverManager.sendNote(originalNote, this);
         }
+    }
+
+    public void updateAuthor(String author) {
+        notesManager.updateNotesAuthor(author);
+    }
+
+    private void loadNotesFromServer() {
+        serverManager.loadNotesFromServer(this);
     }
 }
