@@ -31,4 +31,8 @@
     <string name="login_needed">Un identifiant est nécessaire afin de vous authentifier sur le serveur</string>
     <string name="validate">Valider</string>
     <string name="cancel">Annuler</string>
+    <string name="reset">Réinitialiser</string>
+    <string name="accept">Accetper</string>
+    <string name="refuse">Refuser</string>
+    <string name="conflict_mangement">Gestion de conflit</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.maxime.noteshare;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -24,9 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public final static String LOCAL_TEXT = "local_text";
+    public final static String SERVER_TEXT = "server_text";
+    public final static String FINAL_TEXT = "final_text";
+    public final static int CODE = 1001;
 
     private NotesManager notesManager;
     private ServerManager serverManager;
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
+                if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
                     openNote(position);
                 }
             }
@@ -108,35 +113,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(!closeDrawer()) {
+        if (!closeDrawer()) {
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar w
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_new) {
-            createNewNote();
-            return true;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CODE) {
+            if (resultCode == RESULT_OK) {
+                String finalText =  data.getStringExtra(FINAL_TEXT);
+                Toast.makeText(this, finalText, Toast.LENGTH_LONG).show();
+            }
         }
-        if (id == R.id.action_save) {
-            saveNote();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void setActionsButtonsListeners() {
@@ -158,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         localActionDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
+                if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
                     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                     localActionDelete.setImageResource(R.drawable.ic_done_white_24dp);
                 } else {
@@ -206,6 +195,13 @@ public class MainActivity extends AppCompatActivity {
         serverIcon.setImageResource(idDrawableServerIcon);
     }
 
+    public void manageConflict(String localText, String serverText) {
+        Intent intent = new Intent(this, ConflictResolutionActivity.class);
+        intent.putExtra(LOCAL_TEXT, localText);
+        intent.putExtra(SERVER_TEXT, serverText);
+        startActivityForResult(intent, CODE);
+    }
+
     private void createNewNote() {
         originalNote = null;
         titleEdit.setText(null);
@@ -220,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveNote() {
-        if(originalNote == null) {
+        if (originalNote == null) {
             originalNote = notesManager.create(titleEdit.getText().toString(), contentEdit.getText().toString());
             showMessage(R.string.note_created);
         } else {
@@ -231,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendNote() {
-        if(originalNote != null) {
+        if (originalNote != null) {
             serverManager.sendNote(originalNote);
         }
     }
@@ -257,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
     private void resetListView() {
         listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         listView.clearChoices();
-        if(isLocalTab()) {
+        if (isLocalTab()) {
             localAdapter.notifyDataSetChanged();
             ((ImageButton) findViewById(R.id.local_action_delete)).setImageResource(R.drawable.ic_delete_white_24dp);
         } else {
