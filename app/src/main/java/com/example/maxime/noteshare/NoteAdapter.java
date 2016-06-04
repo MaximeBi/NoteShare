@@ -1,10 +1,13 @@
 package com.example.maxime.noteshare;
 
 import android.content.Context;
+import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,13 +22,14 @@ public class NoteAdapter extends ArrayAdapter<Note> {
     Context context;
     ArrayList<Note> data;
     private static LayoutInflater inflater = null;
+    private MainActivity activity;
 
-    public NoteAdapter(Context context, ArrayList<Note> data) {
-        super(context, R.layout.activity_main, data);
+    public NoteAdapter(MainActivity activity, ArrayList<Note> data) {
+        super(activity, R.layout.activity_main, data);
+        this.activity = activity;
         this.data = data;
         Collections.sort(this.data);
-        this.context=context;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -79,5 +83,44 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             }
         }
         return vi;
+    }
+
+    @Override
+    public Filter getFilter() {
+
+        Filter filter = new Filter() {
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                data = (ArrayList<Note>) results.values;
+                notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                FilterResults results = new FilterResults();
+                if(constraint == null || constraint.length() == 0){
+                    results.values = NotesManager.getInstance(activity).getNotes();
+                    results.count = NotesManager.getInstance(activity).getNotes().size();
+                } else {
+                    ArrayList<Note> filteredList = new ArrayList<Note>();
+
+                    constraint = constraint.toString().toLowerCase();
+                    for (int i = 0; i < data.size(); i++) {
+                        Note n = data.get(i);
+                        if (n.getTitle().toLowerCase().contains(constraint.toString().toLowerCase()))  {
+                            filteredList.add(n);
+                        }
+                    }
+
+                    results.count = filteredList.size();
+                    results.values = filteredList;
+                }
+                return results;
+            }
+        };
+
+        return filter;
     }
 }
