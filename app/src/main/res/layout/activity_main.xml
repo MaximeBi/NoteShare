@@ -28,49 +28,30 @@
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/colorAccent"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_height="50dp"
+                android:background="@color/color_secondary"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-                <LinearLayout
-                    android:background="@color/colorAccent"
+                <ImageView
+                    android:id="@+id/searchView"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_gravity="left"
-                    android:orientation="horizontal"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_search_white_24dp" />
 
-                    <ImageView
-                        android:id="@+id/searchView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:src="@mipmap/ic_search"
-                        android:clickable="true"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="25dip"
-                        android:maxHeight="25dip"
-                        android:padding="0dip" />
+                <EditText
+                    android:id="@+id/text_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_gravity="center"
+                    android:hint="Rechercher ..."
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
 
-                    <EditText
-                        android:id="@+id/text_search"
-                        android:layout_weight="1"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:gravity="left"
-                        android:hint="Input key words"
-                        android:singleLine="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:paddingTop="0dp" />
-
-                </LinearLayout>
             </LinearLayout>
 
             <ListView
@@ -84,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@color/colorAccent">
+                android:background="@color/color_secondary">
                 <ImageButton
                     android:id="@+id/local_action_new"
                     android:layout_weight=".5"
@@ -104,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@color/colorAccent"
+                android:background="@color/color_secondary"
                 android:visibility="gone" >
                 <ImageButton
                     android:id="@+id/server_action_collaborators"

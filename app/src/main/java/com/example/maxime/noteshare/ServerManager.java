@@ -112,6 +112,12 @@ public class ServerManager extends NotesManager {
     }
 
     protected void loadNotes(final String keywords) {
+        notes.add(new Note("server 1", "content 1"));
+        notes.add(new Note("server 2", "content 2"));
+        notes.add(new Note("server 3", "content 3"));
+        notes.add(new Note("server 4", "content 4"));
+        notes.add(new Note("server 5", "content 5"));
+
         if(hasLogin(new Runnable() {
             @Override
             public void run() {

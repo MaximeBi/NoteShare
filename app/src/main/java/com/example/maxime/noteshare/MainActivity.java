@@ -1,7 +1,6 @@
 package com.example.maxime.noteshare;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
@@ -23,10 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private GestureDetectorCompat detector;
     private ListView listView;
     private NoteAdapter localAdapter, serverAdapter;
-    private TextView tabLocal, tabServer;
+    private LinearLayout localTab, serverTab, localActions, serverActions;
     private int currentTab;
 
     @Override
@@ -74,20 +70,22 @@ public class MainActivity extends AppCompatActivity {
         serverManager = ServerManager.getInstance(this);
         serverAdapter = new NoteAdapter(this, serverManager);
 
-        tabLocal = (TextView) findViewById(R.id.id_local);
-        tabLocal.setOnClickListener(new View.OnClickListener() {
+        localActions = (LinearLayout) findViewById(R.id.local_actions);
+        localTab = (LinearLayout) findViewById(R.id.local_tab);
+        localTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetListView();
-                updateTabs(0, localAdapter, tabLocal, R.id.tab_line1, R.id.local_actions, tabServer, R.id.tab_line2, R.id.server_actions, R.drawable.ic_sd_storage_white_36dp, R.drawable.ic_storage_black_36dp);
+                updateTabs(0, localAdapter, localTab, localActions, serverTab, serverActions);
             }
         });
-        tabServer = (TextView) findViewById(R.id.id_share);
-        tabServer.setOnClickListener(new View.OnClickListener() {
+        serverActions = (LinearLayout) findViewById(R.id.server_actions);
+        serverTab = (LinearLayout) findViewById(R.id.server_tab);
+        serverTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetListView();
-                updateTabs(1, serverAdapter, tabServer, R.id.tab_line2, R.id.server_actions, tabLocal, R.id.tab_line1, R.id.local_actions, R.drawable.ic_sd_storage_black_36dp, R.drawable.ic_storage_white_36dp);
+                updateTabs(1, serverAdapter, serverTab, serverActions, localTab, localActions);
             }
         });
 
@@ -211,10 +209,10 @@ public class MainActivity extends AppCompatActivity {
         ImageButton actionDelete = (ImageButton) findViewById(idActionDeleteButton);
         if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
             listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            actionDelete.setImageResource(R.drawable.ic_done_white_24dp);
+            actionDelete.setImageResource(R.drawable.ic_delete_forever_white_24dp);
         } else {
             SparseBooleanArray checked = listView.getCheckedItemPositions();
-            ArrayList<Note> toDelete = new ArrayList<Note>();
+            ArrayList<Note> toDelete = new ArrayList<>();
             for (int i = 0; i < listView.getCount(); i++) {
                 if (checked.get(i)) {
                     toDelete.add((Note) listView.getItemAtPosition(i));
@@ -227,23 +225,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateTabs(int currentTab, NoteAdapter adapter, TextView tabToHighlight, int idLineToHighlight, int idActionsToDisplay, TextView tabToUnhighlight, int idLineToUnhighlight, int idActionsToRemove, int idDrawableLocalIcon, int idDrawableServerIcon) {
+    private void updateTabs(int currentTab, NoteAdapter adapter, LinearLayout tabToHighlight, LinearLayout actionsToDisplay, LinearLayout tabToUnhighlight, LinearLayout actionsToRemove) {
         this.currentTab = currentTab;
-        ImageView lineToHighlight = (ImageView) findViewById(idLineToHighlight);
-        ImageView lineToUnhighlight = (ImageView) findViewById(idLineToUnhighlight);
         listView.setAdapter(adapter);
-        tabToHighlight.setTextColor(Color.WHITE);
-        tabToUnhighlight.setTextColor(Color.BLACK);
-        lineToHighlight.setBackgroundColor(Color.WHITE);
-        lineToUnhighlight.setBackgroundColor(Color.BLACK);
-        LinearLayout actionsToDisplay = (LinearLayout) findViewById(idActionsToDisplay);
+        tabToHighlight.setBackgroundResource(R.drawable.border_primary_background);
+        ((ImageView) tabToHighlight.getChildAt(0)).setColorFilter(null);
+        ((TextView) tabToHighlight.getChildAt(1)).setTextColor(getResources().getColor(R.color.highlight_color));
+        tabToUnhighlight.setBackgroundColor(getResources().getColor(R.color.color_primary));
+        ((ImageView) tabToUnhighlight.getChildAt(0)).setColorFilter(getResources().getColor(R.color.unhighlight_color));
+        ((TextView) tabToUnhighlight.getChildAt(1)).setTextColor(getResources().getColor(R.color.unhighlight_color));
         actionsToDisplay.setVisibility(View.VISIBLE);
-        LinearLayout actionsToRemove = (LinearLayout) findViewById(idActionsToRemove);
         actionsToRemove.setVisibility(View.GONE);
-        ImageView localIcon = (ImageView) findViewById(R.id.local_icon);
-        localIcon.setImageResource(idDrawableLocalIcon);
-        ImageView serverIcon = (ImageView) findViewById(R.id.server_icon);
-        serverIcon.setImageResource(idDrawableServerIcon);
     }
 
     public void manageConflict(String localText, String serverText) {

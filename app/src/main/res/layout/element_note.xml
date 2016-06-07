@@ -6,28 +6,34 @@
     android:layout_height="match_parent"
     android:background="@drawable/selected_item_background" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ItemImage" />
+    <TextView
+        android:id="@+id/note_icon"
+        android:layout_margin="5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circle"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#ffffff" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="25dp"
+        android:paddingTop="5dp" >
 
         <TextView
-            android:id="@+id/ItemTitle"
+            android:id="@+id/note_title"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/ItemText"
+            android:id="@+id/note_date"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/ItemTitle" />
+            android:layout_width="match_parent" />
     </LinearLayout>
 </LinearLayout>
