@@ -4,18 +4,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ConflictResolutionActivity extends AppCompatActivity {
@@ -25,21 +22,26 @@ public class ConflictResolutionActivity extends AppCompatActivity {
     private static final int EQUAL = 2;
 
     private int conflicts;
+    private Note note;
     private String localText;
     private String serverText;
+    private LinearLayout conflictsResolutionLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conflict_resolution);
-        this.conflicts = 0;
         Intent intent = getIntent();
-        localText = intent.getStringExtra(MainActivity.LOCAL_TEXT);
-        serverText = intent.getStringExtra(MainActivity.SERVER_TEXT);
+        this.note = (Note) intent.getSerializableExtra(MainActivity.NOTE);
+        this.localText = note.getContent();
+        this.serverText = intent.getStringExtra(MainActivity.SERVER_TEXT);
+
+        TextView titleView = (TextView) findViewById(R.id.title);
+        titleView.setText(note.getTitle());
 
         initialiseView();
 
-        final Button validate = (Button) findViewById(R.id.validate);
+        final ImageButton validate = (ImageButton) findViewById(R.id.validate);
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +52,7 @@ public class ConflictResolutionActivity extends AppCompatActivity {
             }
         });
 
-        Button reset = (Button) findViewById(R.id.reset);
+        ImageButton reset = (ImageButton) findViewById(R.id.reset);
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,30 +63,29 @@ public class ConflictResolutionActivity extends AppCompatActivity {
     }
 
     private void initialiseView() {
+        this.conflicts = 0;
         diff_match_patch difference = new diff_match_patch();
         difference.Diff_EditCost = 4;
         difference.Diff_Timeout = 1;
-        LinkedList<diff_match_patch.Diff> deltas = difference.diff_main(localText, serverText);
+        LinkedList<diff_match_patch.Diff> deltas = difference.diff_main(serverText, localText);
         difference.diff_cleanupSemantic(deltas);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.conflict_resolution);
-        layout.removeAllViews();
+        conflictsResolutionLayout = (LinearLayout) findViewById(R.id.conflict_resolution);
+        conflictsResolutionLayout.removeAllViews();
 
         for(diff_match_patch.Diff diff : deltas) {
             if(diff.operation.ordinal() != 2) {
                 conflicts++;
             }
-            layout.addView(createTextView(diff));
+            conflictsResolutionLayout.addView(createTextView(diff));
         }
     }
 
     private String getFinalText() {
         String result = "";
-        LinearLayout layout = (LinearLayout) findViewById(R.id.conflict_resolution);
-
-        for(int i = 0 ; i < layout.getChildCount(); i++) {
-            TextView textView = (TextView) layout.getChildAt(i);
-            result += " " + textView.getText();
+        for(int i = 0 ; i < conflictsResolutionLayout.getChildCount(); i++) {
+            TextView textView = (TextView) conflictsResolutionLayout.getChildAt(i);
+            result += textView.getText();
         }
         return result;
     }
@@ -92,6 +93,7 @@ public class ConflictResolutionActivity extends AppCompatActivity {
     private TextView createTextView(final diff_match_patch.Diff diff) {
         final TextView textView = new TextView(this);
         textView.setText(diff.text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         int color = Color.BLACK;
         if(diff.operation.ordinal() == DELETE) {
             color = Color.RED;
@@ -113,14 +115,18 @@ public class ConflictResolutionActivity extends AppCompatActivity {
     private void conflictRemoved() {
         conflicts--;
         if(conflicts == 0) {
-            Button validate = (Button) findViewById(R.id.validate);
+            ImageButton validate = (ImageButton) findViewById(R.id.validate);
             validate.setEnabled(true);
         }
     }
 
     private AlertDialog menu(final TextView textView, final diff_match_patch.Diff diff) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(diff.operation.name());
+        if(diff.operation.ordinal() == DELETE) {
+            builder.setMessage(getString(R.string.element_deleted));
+        } else {
+            builder.setMessage(getString(R.string.element_added));
+        }
         builder.setTitle(getString(R.string.conflict_mangement));
         builder.setPositiveButton(getString(R.string.accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

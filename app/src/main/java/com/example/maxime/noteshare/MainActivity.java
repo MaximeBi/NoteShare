@@ -238,9 +238,9 @@ public class MainActivity extends AppCompatActivity {
         actionsToRemove.setVisibility(View.GONE);
     }
 
-    public void manageConflict(String localText, String serverText) {
+    public void manageConflict(Note noteLocal, String serverText) {
         Intent intent = new Intent(this, ConflictResolutionActivity.class);
-        intent.putExtra(LOCAL_TEXT, localText);
+        intent.putExtra(NOTE, noteLocal);
         intent.putExtra(SERVER_TEXT, serverText);
         startActivityForResult(intent, CODE_CONFLICT_RESOLUTION);
     }
