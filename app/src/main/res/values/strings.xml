@@ -23,6 +23,8 @@
     <string name="enregistrement_online">Note partagée sur le serveur</string>
     <string name="error_enregistrement">Erreur partage de la note en ligne</string>
     <string name="error_connexion_serveur">Erreur lors de la connexion avec le serveur</string>
+    <string name="error_delete">Erreur lors de la suppression des notes</string>
+    <string name="delete_done">Les notes ont été supprimées</string>
 
     <string name="preference_file_key">com.example.maxime.noteshare.PREFERENCE_FILE_KEY</string>
     <string name="login_setting">login_setting</string>

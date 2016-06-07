@@ -12,12 +12,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,6 +72,11 @@ public class ServerManager extends NotesManager {
     }
 
     protected void loadNotes(String keywords) {
+        notes.add(new Note("server 1", "content 1"));
+        notes.add(new Note("server 2", "content 2"));
+        notes.add(new Note("server 3", "content 3"));
+        notes.add(new Note("server 4", "content 4"));
+        notes.add(new Note("server 5", "content 5"));
         if(hasLogin()) {
             String parameters = "";
             String login = "/login/"+getLogin();
@@ -99,22 +107,21 @@ public class ServerManager extends NotesManager {
     }
 
     protected void deleteNotes(final ArrayList<Note> notes) {
-        Log.d("ServerManager", "Delete Notes");
         if(hasLogin()) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+"/delete", new JSONObject(Tools.toJson(notes)), new Response.Listener<JSONObject>() {
+                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.DELETE, url, new JSONArray(Tools.toJson(notes)), new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         Log.d("ServerManager delete", response.toString());
-                        activity.showMessage(R.string.enregistrement_online);
+                        activity.showMessage(R.string.delete_done);
                         notes.removeAll(notes);
                         notifyObservers();
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        activity.showMessage(R.string.error_enregistrement);
+                        activity.showMessage(R.string.error_delete);
                     }
                 });
                 queue.add(jsonObjectRequest);
