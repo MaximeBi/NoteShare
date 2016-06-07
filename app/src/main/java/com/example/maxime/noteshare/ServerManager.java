@@ -47,7 +47,12 @@ public class ServerManager extends NotesManager {
     }
 
     public void sendNote(final Note note) {
-         if(hasLogin()) {
+         if(hasLogin(new Runnable() {
+             @Override
+             public void run() {
+                 sendNote(note);
+             }
+         })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(Tools.toJson(note)), new Response.Listener<JSONObject>() {
@@ -71,13 +76,48 @@ public class ServerManager extends NotesManager {
         }
     }
 
-    protected void loadNotes(String keywords) {
-        notes.add(new Note("server 1", "content 1"));
-        notes.add(new Note("server 2", "content 2"));
-        notes.add(new Note("server 3", "content 3"));
-        notes.add(new Note("server 4", "content 4"));
-        notes.add(new Note("server 5", "content 5"));
-        if(hasLogin()) {
+    public void updateCollaborators(final Note note) {
+        if(hasLogin(new Runnable() {
+            @Override
+            public void run() {
+                updateCollaborators(note);
+            }
+        })) {
+            RequestQueue queue = Volley.newRequestQueue(activity);
+            try {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+"/collaborators", new JSONObject(Tools.toJson(note)), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("ServerManager collab", response.toString());
+                        activity.showMessage(R.string.collaborators_updated);
+                        for(Note n : notes) {
+                            if(n.getId() == note.getId()) {
+                                n.setCollaborators(note.getCollaborators());
+                                break;
+                            }
+                        }
+                        notifyObservers();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        activity.showMessage(R.string.error_collaborators_update);
+                    }
+                });
+                queue.add(jsonObjectRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected void loadNotes(final String keywords) {
+        if(hasLogin(new Runnable() {
+            @Override
+            public void run() {
+                loadNotes(keywords);
+            }
+        })) {
             String parameters = "";
             String login = "/login/"+getLogin();
             if(keywords != null && !keywords.isEmpty()) {
@@ -107,7 +147,12 @@ public class ServerManager extends NotesManager {
     }
 
     protected void deleteNotes(final ArrayList<Note> notes) {
-        if(hasLogin()) {
+        if(hasLogin(new Runnable() {
+            @Override
+            public void run() {
+                deleteNotes(notes);
+            }
+        })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
                 JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.DELETE, url, new JSONArray(Tools.toJson(notes)), new Response.Listener<JSONArray>() {
@@ -131,14 +176,9 @@ public class ServerManager extends NotesManager {
         }
     }
 
-    private boolean hasLogin() {
+    private boolean hasLogin(final Runnable runnable) {
         if(getLogin() == null) {
-            createLoginDialog(new Runnable() {
-                @Override
-                public void run() {
-                    getNotes();
-                }
-            }).show();
+            createLoginDialog(runnable).show();
             return false;
         }
         return true;

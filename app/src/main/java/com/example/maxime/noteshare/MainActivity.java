@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == CODE_COLLABORATORS_LIST) {
             if (resultCode == RESULT_OK) {
                 Note note = (Note) data.getSerializableExtra(NOTE);
-                Toast.makeText(this, note.toString(), Toast.LENGTH_LONG).show();
+                serverManager.updateCollaborators(note);
             }
         }
     }
