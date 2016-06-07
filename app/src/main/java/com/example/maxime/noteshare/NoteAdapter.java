@@ -1,8 +1,6 @@
 package com.example.maxime.noteshare;
 
 import android.content.Context;
-import android.provider.SyncStateContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +14,29 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-public class NoteAdapter extends ArrayAdapter<Note> {
+public class NoteAdapter extends ArrayAdapter<Note> implements Observer {
 
-    Context context;
     ArrayList<Note> data;
     private static LayoutInflater inflater = null;
-    private MainActivity activity;
+    private NotesManager notesManager;
 
-    public NoteAdapter(MainActivity activity, ArrayList<Note> data) {
-        super(activity, R.layout.activity_main, data);
-        this.activity = activity;
-        this.data = data;
+    public NoteAdapter(Context context, NotesManager notesManager) {
+        super(context, R.layout.activity_main, notesManager.getNotes());
+        this.notesManager = notesManager;
+        this.notesManager.addObserver(this);
+        this.data = this.notesManager.getNotes();
         Collections.sort(this.data);
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public void notifyDataSetChanged() {
-        Collections.sort(this.data);
+        if(this.data != null) {
+            Collections.sort(this.data);
+        }
         super.notifyDataSetChanged();
     }
 
@@ -86,41 +88,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
     }
 
     @Override
-    public Filter getFilter() {
-
-        Filter filter = new Filter() {
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = (ArrayList<Note>) results.values;
-                notifyDataSetChanged();
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                FilterResults results = new FilterResults();
-                if(constraint == null || constraint.length() == 0){
-                    results.values = NotesManager.getInstance(activity).getNotes();
-                    results.count = NotesManager.getInstance(activity).getNotes().size();
-                } else {
-                    ArrayList<Note> filteredList = new ArrayList<Note>();
-
-                    constraint = constraint.toString().toLowerCase();
-                    for (int i = 0; i < data.size(); i++) {
-                        Note n = data.get(i);
-                        if (n.getTitle().toLowerCase().contains(constraint.toString().toLowerCase()))  {
-                            filteredList.add(n);
-                        }
-                    }
-
-                    results.count = filteredList.size();
-                    results.values = filteredList;
-                }
-                return results;
-            }
-        };
-
-        return filter;
+    public void update(Observable observable, Object data) {
+        notifyDataSetChanged();
     }
 }

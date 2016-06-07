@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,9 +30,12 @@ public class MainActivity extends AppCompatActivity {
     public final static String LOCAL_TEXT = "local_text";
     public final static String SERVER_TEXT = "server_text";
     public final static String FINAL_TEXT = "final_text";
-    public final static int CODE = 1001;
+    public final static String NOTE_TITLE = "note_title";
+    public final static String NOTE_COLLABORATORS = "note_collaborators";
+    public final static int CODE_CONFLICT_RESOLUTION = 1001;
+    public final static int CODE_COLLABORATORS_LIST = 2001;
 
-    private NotesManager notesManager;
+    private LocalManager localManager;
     private ServerManager serverManager;
     private Note originalNote;
     private EditText titleEdit;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private NoteAdapter localAdapter, serverAdapter;
     private TextView tabLocal, tabServer;
+    private int currentTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
         titleEdit = (EditText) findViewById(R.id.title_edit);
         contentEdit = (EditText) findViewById(R.id.content_edit);
 
-        notesManager = NotesManager.getInstance(this);
-        localAdapter = new NoteAdapter(this, notesManager.getNotes());
+        localManager = LocalManager.getInstance(this);
+        localAdapter = new NoteAdapter(this, localManager);
         serverManager = ServerManager.getInstance(this);
-        serverAdapter = new NoteAdapter(this, serverManager.getNotes());
+        serverAdapter = new NoteAdapter(this, serverManager);
 
         tabLocal = (TextView) findViewById(R.id.id_local);
         tabLocal.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 updateTabs(0, localAdapter, tabLocal, R.id.tab_line1, R.id.local_actions, tabServer, R.id.tab_line2, R.id.server_actions, R.drawable.ic_sd_storage_white_36dp, R.drawable.ic_storage_black_36dp);
             }
         });
-
         tabServer = (TextView) findViewById(R.id.id_share);
         tabServer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,9 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
+                if(findViewById(R.id.server_action_collaborators).isFocused()) {
+                    Toast.makeText(MainActivity.this, "Collaborators mode", Toast.LENGTH_SHORT).show();
+                } else if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
                     openNote(position);
                 }
             }
@@ -115,21 +117,19 @@ public class MainActivity extends AppCompatActivity {
         EditText edit = (EditText) findViewById(R.id.text_search);
         edit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
             public void afterTextChanged(Editable s) {
-                if(isLocalTab()) {
-                    localAdapter.getFilter().filter(s.toString());
+                if(s.toString().length() > 2) {
+                    if (isLocalTab()) {
+                        localManager.filter(s.toString());
+                    } else {
+                        serverManager.filter(s.toString());
+                    }
                 }
             }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
     }
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CODE) {
+        if (requestCode == CODE_CONFLICT_RESOLUTION) {
             if (resultCode == RESULT_OK) {
                 String finalText =  data.getStringExtra(FINAL_TEXT);
                 Toast.makeText(this, finalText, Toast.LENGTH_LONG).show();
@@ -152,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setActionsButtonsListeners() {
         ImageButton localActionNew = (ImageButton) findViewById(R.id.local_action_new);
-        final ImageButton localActionDelete = (ImageButton) findViewById(R.id.local_action_delete);
-        ImageButton serverActionCollaborators = (ImageButton) findViewById(R.id.server_action_collaborators);
+        ImageButton localActionDelete = (ImageButton) findViewById(R.id.local_action_delete);
+        final ImageButton serverActionCollaborators = (ImageButton) findViewById(R.id.server_action_collaborators);
         ImageButton serverActionDelete = (ImageButton) findViewById(R.id.server_action_delete);
         ImageButton serverActionRefresh = (ImageButton) findViewById(R.id.server_action_refresh);
 
@@ -162,46 +162,68 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 createNewNote();
                 closeDrawer();
-
             }
         });
 
         localActionDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
-                    listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                    localActionDelete.setImageResource(R.drawable.ic_done_white_24dp);
+                deleteNotesListener(localManager, R.id.local_action_delete);
+            }
+        });
+
+        serverActionCollaborators.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(serverActionCollaborators.isFocused()) {
+                    serverActionCollaborators.setFocusableInTouchMode(false);
+                    serverActionCollaborators.clearFocus();
                 } else {
-                    SparseBooleanArray checked = listView.getCheckedItemPositions();
-                    ArrayList<Note> toDelete = new ArrayList<Note>();
-                    for (int i = 0; i < listView.getCount(); i++) {
-                        if (checked.get(i)) {
-                            toDelete.add((Note) listView.getItemAtPosition(i));
-                        }
-                    }
-                    listView.clearChoices();
-                    notesManager.deleteNotes(toDelete);
-                    localAdapter.notifyDataSetChanged();
-                    listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
-                    localActionDelete.setImageResource(R.drawable.ic_delete_white_24dp);
+                    serverActionCollaborators.setFocusableInTouchMode(true);
+                    serverActionCollaborators.requestFocus();
                 }
+            }
+        });
+
+        serverActionDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteNotesListener(serverManager, R.id.server_action_delete);
             }
         });
 
         serverActionRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadNotesFromServer();
+                serverManager.getNotes();
             }
         });
     }
 
-    private void updateTabs(int currentItem, NoteAdapter adapter, TextView tabToHighlight, int idLineToHighlight, int idActionsToDisplay, TextView tabToUnhighlight, int idLineToUnhighlight, int idActionsToRemove, int idDrawableLocalIcon, int idDrawableServerIcon) {
-        ViewPager mPageVp = (ViewPager) findViewById(R.id.vp);
+    private void deleteNotesListener(NotesManager notesManager, int idActionDeleteButton) {
+        ImageButton actionDelete = (ImageButton) findViewById(idActionDeleteButton);
+        if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            actionDelete.setImageResource(R.drawable.ic_done_white_24dp);
+        } else {
+            SparseBooleanArray checked = listView.getCheckedItemPositions();
+            ArrayList<Note> toDelete = new ArrayList<Note>();
+            for (int i = 0; i < listView.getCount(); i++) {
+                if (checked.get(i)) {
+                    toDelete.add((Note) listView.getItemAtPosition(i));
+                }
+            }
+            listView.clearChoices();
+            notesManager.delete(toDelete);
+            listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+            actionDelete.setImageResource(R.drawable.ic_delete_white_24dp);
+        }
+    }
+
+    private void updateTabs(int currentTab, NoteAdapter adapter, TextView tabToHighlight, int idLineToHighlight, int idActionsToDisplay, TextView tabToUnhighlight, int idLineToUnhighlight, int idActionsToRemove, int idDrawableLocalIcon, int idDrawableServerIcon) {
+        this.currentTab = currentTab;
         ImageView lineToHighlight = (ImageView) findViewById(idLineToHighlight);
         ImageView lineToUnhighlight = (ImageView) findViewById(idLineToUnhighlight);
-        mPageVp.setCurrentItem(currentItem);
         listView.setAdapter(adapter);
         tabToHighlight.setTextColor(Color.WHITE);
         tabToUnhighlight.setTextColor(Color.BLACK);
@@ -221,7 +243,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ConflictResolutionActivity.class);
         intent.putExtra(LOCAL_TEXT, localText);
         intent.putExtra(SERVER_TEXT, serverText);
-        startActivityForResult(intent, CODE);
+        startActivityForResult(intent, CODE_CONFLICT_RESOLUTION);
+    }
+
+    public void manageCollaborators(Note n) {
+        Intent intent = new Intent(this, CollaboratorsListActivity.class);
+        intent.putExtra(NOTE_TITLE, n.getTitle());
+        intent.putStringArrayListExtra(NOTE_COLLABORATORS, n.getCollaborators());
+        startActivityForResult(intent, CODE_COLLABORATORS_LIST);
     }
 
     private void createNewNote() {
@@ -239,13 +268,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveNote() {
         if (originalNote == null) {
-            originalNote = notesManager.create(titleEdit.getText().toString(), contentEdit.getText().toString());
+            originalNote = localManager.create(titleEdit.getText().toString(), contentEdit.getText().toString());
             showMessage(R.string.note_created);
         } else {
-            originalNote = notesManager.update(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
+            originalNote = localManager.update(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
             showMessage(R.string.note_updated);
         }
-        localAdapter.notifyDataSetChanged();
     }
 
     public void sendNote() {
@@ -254,13 +282,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadNotesFromServer() {
-        serverManager.loadNotesFromServer();
-        serverAdapter.notifyDataSetChanged();
-    }
-
     public void updateAuthor(String author) {
-        notesManager.updateNotesAuthor(author);
+        localManager.updateNotesAuthor(author);
     }
 
     private boolean closeDrawer() {
@@ -273,8 +296,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetListView() {
-        listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
         listView.clearChoices();
+        listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+        EditText edit = (EditText) findViewById(R.id.text_search);
+        if(!edit.getText().toString().isEmpty()) {
+            edit.setText("");
+        }
         if (isLocalTab()) {
             localAdapter.notifyDataSetChanged();
             ((ImageButton) findViewById(R.id.local_action_delete)).setImageResource(R.drawable.ic_delete_white_24dp);
@@ -285,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isLocalTab() {
-        return ((ViewPager) findViewById(R.id.vp)).getCurrentItem() == 0;
+        return currentTab == 0;
     }
 
     public void showMessage(int id) {

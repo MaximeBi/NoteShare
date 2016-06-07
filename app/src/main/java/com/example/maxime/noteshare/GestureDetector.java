@@ -21,7 +21,6 @@ public class GestureDetector extends android.view.GestureDetector.SimpleOnGestur
     private boolean onTouch = false;
     private LinearLayout choices;
     private MainActivity activity;
-    private RequestQueue queue;
 
     public GestureDetector(MainActivity activity) {
         this.activity = activity;

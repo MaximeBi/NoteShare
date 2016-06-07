@@ -30,7 +30,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".ConflictResolutionActivity"></activity>
+        <activity android:name=".ConflictResolutionActivity" />
+        <activity android:name=".CollaboratorsListActivity"></activity>
     </application>
 
 </manifest>

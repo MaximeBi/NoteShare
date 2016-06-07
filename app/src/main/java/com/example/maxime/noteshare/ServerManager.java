@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,22 +24,16 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class ServerManager {
+public class ServerManager extends NotesManager {
 
     private static final String IP_ADDRESS = "172.25.12.95";
     private static final String PORT = "8080";
     private String url;
     private static ServerManager instance = null;
-    private ArrayList<Note> notes;
-    private MainActivity activity;
 
     private ServerManager(MainActivity activity) {
+        super(activity);
         this.url = "http://" + IP_ADDRESS + ":" + PORT;
-        this.activity = activity;
-        this.notes = new ArrayList<Note>();
-        notes.add(new Note("server 1", "content 1"));
-        notes.add(new Note("server 2", "content 2"));
-        loadNotesFromServer();
     }
 
     public static ServerManager getInstance(MainActivity activity) {
@@ -50,20 +43,7 @@ public class ServerManager {
         return instance;
     }
 
-    private boolean hasLogin() {
-        if(getLogin() == null) {
-            createLoginDialog(new Runnable() {
-                @Override
-                public void run() {
-                    loadNotesFromServer();
-                }
-            }).show();
-            return false;
-        }
-        return true;
-    }
-
-    public void sendNote(Note note) {
+    public void sendNote(final Note note) {
          if(hasLogin()) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
@@ -71,6 +51,8 @@ public class ServerManager {
                     @Override
                     public void onResponse(JSONObject response) {
                         activity.showMessage(R.string.enregistrement_online);
+                        notes.add(note);
+                        notifyObservers();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -85,18 +67,25 @@ public class ServerManager {
         }
     }
 
-    public void loadNotesFromServer(String parameters) {
+    protected void loadNotes(String keywords) {
+//        notes.add(new Note("server 1", "content 1"));
+//        notes.add(new Note("server 2", "content 2"));
+//        notes.add(new Note("server 3", "content 3"));
+//        notes.add(new Note("server 4", "content 4"));
+//        notes.add(new Note("server 5", "content 5"));
         if(hasLogin()) {
-            String keywords = "";
+            String parameters = "";
             String login = "/login/"+getLogin();
-            if(parameters != null && !parameters.isEmpty()) {
-                keywords = "/keywords/" + parameters.replaceAll(" ", ",");
+            if(keywords != null && !keywords.isEmpty()) {
+                parameters = "/keywords/" + keywords.toLowerCase().replaceAll(" ", ",");
             }
             RequestQueue queue = Volley.newRequestQueue(activity);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url+login+keywords, new Response.Listener<String>() {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url+login+parameters, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    Log.d("ServerManager loadNotes", response);
                     toNotes(response);
+                    notifyObservers();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -108,13 +97,25 @@ public class ServerManager {
         }
     }
 
-    public void loadNotesFromServer() {
-        loadNotesFromServer(null);
+    protected void loadNotes() {
+        loadNotes(null);
     }
 
-    private String getLogin() {
-        SharedPreferences sharedPref = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        return sharedPref.getString(activity.getString(R.string.login_setting), null);
+    protected void deleteNotes(ArrayList<Note> notes) {
+        Log.d("ServerManager", "Delete Notes");
+    }
+
+    private boolean hasLogin() {
+        if(getLogin() == null) {
+            createLoginDialog(new Runnable() {
+                @Override
+                public void run() {
+                    getNotes();
+                }
+            }).show();
+            return false;
+        }
+        return true;
     }
 
     private void setLogin(String login) {
@@ -126,12 +127,10 @@ public class ServerManager {
     }
 
     private Dialog createLoginDialog(final Runnable runnable) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.login_dialog);
         builder.setMessage(R.string.enter_login);
 
-        // Use an EditText view to get user input.
         final EditText input = new EditText(activity);
         builder.setView(input);
 
@@ -157,21 +156,17 @@ public class ServerManager {
         return builder.create();
     }
 
-    public String toJson(Note n){
+    private String toJson(Note n){
         Gson gson = new Gson();
         return gson.toJson(n);
     }
 
-    public void toNotes(String n) {
+    private void toNotes(String n) {
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<Note>>() {
         }.getType();
         ArrayList<Note> loaded = gson.fromJson(n, listType);
         notes.clear();
         notes.addAll(loaded);
-    }
-
-    public ArrayList<Note> getNotes() {
-        return notes;
     }
 }
