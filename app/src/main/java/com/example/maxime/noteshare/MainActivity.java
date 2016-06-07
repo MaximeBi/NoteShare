@@ -23,15 +23,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     public final static String LOCAL_TEXT = "local_text";
     public final static String SERVER_TEXT = "server_text";
     public final static String FINAL_TEXT = "final_text";
-    public final static String NOTE_TITLE = "note_title";
-    public final static String NOTE_COLLABORATORS = "note_collaborators";
+    public final static String NOTE = "note";
     public final static int CODE_CONFLICT_RESOLUTION = 1001;
     public final static int CODE_COLLABORATORS_LIST = 2001;
 
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(findViewById(R.id.server_action_collaborators).isFocused()) {
-                    Toast.makeText(MainActivity.this, "Collaborators mode", Toast.LENGTH_SHORT).show();
+                    manageCollaborators((Note) listView.getItemAtPosition(position));
                 } else if (listView.getChoiceMode() == ListView.CHOICE_MODE_NONE) {
                     openNote(position);
                 }
@@ -146,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String finalText =  data.getStringExtra(FINAL_TEXT);
                 Toast.makeText(this, finalText, Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == CODE_COLLABORATORS_LIST) {
+            if (resultCode == RESULT_OK) {
+                Note note = (Note) data.getSerializableExtra(NOTE);
+                Toast.makeText(this, note.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -248,8 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void manageCollaborators(Note n) {
         Intent intent = new Intent(this, CollaboratorsListActivity.class);
-        intent.putExtra(NOTE_TITLE, n.getTitle());
-        intent.putStringArrayListExtra(NOTE_COLLABORATORS, n.getCollaborators());
+        intent.putExtra(NOTE, n);
         startActivityForResult(intent, CODE_COLLABORATORS_LIST);
     }
 

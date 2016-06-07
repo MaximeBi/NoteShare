@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Note implements Serializable, Comparable<Note> {
 
@@ -18,10 +19,12 @@ public class Note implements Serializable, Comparable<Note> {
     private ArrayList<String> collaborators;
     private Date creationDate;
     private Date lastUpdate;
+    private HashMap<String, String> smartContents;
 
     public Note() {
         this.keywords = new ArrayList<>();
         this.collaborators = new ArrayList<>();
+        this.smartContents = new HashMap<>();
     }
 
     public Note(String title, String content) {
@@ -31,6 +34,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.collaborators = new ArrayList<>();
         this.creationDate = new Date();
         this.lastUpdate = new Date();
+        this.smartContents = new HashMap<>();
         this.id = createId();
     }
 
@@ -44,6 +48,8 @@ public class Note implements Serializable, Comparable<Note> {
         this.collaborators.addAll(n.collaborators);
         this.creationDate = new Date();
         this.lastUpdate = new Date();
+        this.smartContents = new HashMap<>();
+        this.smartContents.putAll(n.smartContents);
         this.id = createId();
     }
 
@@ -65,6 +71,8 @@ public class Note implements Serializable, Comparable<Note> {
         this.keywords.addAll(n.keywords);
         this.collaborators.clear();
         this.collaborators.addAll(n.collaborators);
+        this.smartContents.clear();
+        this.smartContents.putAll(n.smartContents);
         this.lastUpdate = new Date();
     }
 
@@ -76,6 +84,8 @@ public class Note implements Serializable, Comparable<Note> {
         this.keywords.addAll(n.keywords);
         this.collaborators.clear();
         this.collaborators.addAll(n.collaborators);
+        this.smartContents.clear();
+        this.smartContents.putAll(n.smartContents);
         this.creationDate = n.creationDate;
         this.lastUpdate = n.lastUpdate;
         this.id = n.id;
@@ -88,6 +98,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.collaborators.clear();
         this.creationDate = null;
         this.lastUpdate = null;
+        this.smartContents.clear();
         this.id = null;
 
     }
@@ -158,6 +169,14 @@ public class Note implements Serializable, Comparable<Note> {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public HashMap<String, String> getSmartContents() {
+        return smartContents;
+    }
+
+    public void setSmartContents(HashMap<String, String> smartContents) {
+        this.smartContents = smartContents;
     }
 
     @Override

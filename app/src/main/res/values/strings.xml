@@ -35,4 +35,7 @@
     <string name="accept">Accetper</string>
     <string name="refuse">Refuser</string>
     <string name="conflict_mangement">Gestion de conflit</string>
+
+    <string name="unvalid_collaborator">Veuillez saisir un collaborateur valide</string>
+    <string name="collaborator_exists">Le collaborateur existe déjà</string>
 </resources>

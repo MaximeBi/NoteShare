@@ -19,12 +19,12 @@ import java.util.Observer;
 
 public class NoteAdapter extends ArrayAdapter<Note> implements Observer {
 
-    ArrayList<Note> data;
+    private ArrayList<Note> data;
     private static LayoutInflater inflater = null;
     private NotesManager notesManager;
 
     public NoteAdapter(Context context, NotesManager notesManager) {
-        super(context, R.layout.activity_main, notesManager.getNotes());
+        super(context, R.layout.element_note);
         this.notesManager = notesManager;
         this.notesManager.addObserver(this);
         this.data = this.notesManager.getNotes();

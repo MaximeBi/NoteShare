@@ -47,9 +47,10 @@ public class ServerManager extends NotesManager {
          if(hasLogin()) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(toJson(note)), new Response.Listener<JSONObject>() {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(Tools.toJson(note)), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("ServerManager sendNote", response.toString());
                         activity.showMessage(R.string.enregistrement_online);
                         notes.add(note);
                         notifyObservers();
@@ -68,11 +69,6 @@ public class ServerManager extends NotesManager {
     }
 
     protected void loadNotes(String keywords) {
-//        notes.add(new Note("server 1", "content 1"));
-//        notes.add(new Note("server 2", "content 2"));
-//        notes.add(new Note("server 3", "content 3"));
-//        notes.add(new Note("server 4", "content 4"));
-//        notes.add(new Note("server 5", "content 5"));
         if(hasLogin()) {
             String parameters = "";
             String login = "/login/"+getLogin();
@@ -84,7 +80,8 @@ public class ServerManager extends NotesManager {
                 @Override
                 public void onResponse(String response) {
                     Log.d("ServerManager loadNotes", response);
-                    toNotes(response);
+                    notes.clear();
+                    notes.addAll(Tools.toNotes(response));
                     notifyObservers();
                 }
             }, new Response.ErrorListener() {
@@ -101,8 +98,30 @@ public class ServerManager extends NotesManager {
         loadNotes(null);
     }
 
-    protected void deleteNotes(ArrayList<Note> notes) {
+    protected void deleteNotes(final ArrayList<Note> notes) {
         Log.d("ServerManager", "Delete Notes");
+        if(hasLogin()) {
+            RequestQueue queue = Volley.newRequestQueue(activity);
+            try {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+"/delete", new JSONObject(Tools.toJson(notes)), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("ServerManager delete", response.toString());
+                        activity.showMessage(R.string.enregistrement_online);
+                        notes.removeAll(notes);
+                        notifyObservers();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        activity.showMessage(R.string.error_enregistrement);
+                    }
+                });
+                queue.add(jsonObjectRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean hasLogin() {
@@ -154,19 +173,5 @@ public class ServerManager extends NotesManager {
         });
 
         return builder.create();
-    }
-
-    private String toJson(Note n){
-        Gson gson = new Gson();
-        return gson.toJson(n);
-    }
-
-    private void toNotes(String n) {
-        Gson gson = new Gson();
-        Type listType = new TypeToken<ArrayList<Note>>() {
-        }.getType();
-        ArrayList<Note> loaded = gson.fromJson(n, listType);
-        notes.clear();
-        notes.addAll(loaded);
     }
 }
