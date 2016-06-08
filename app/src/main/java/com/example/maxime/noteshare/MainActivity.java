@@ -1,6 +1,8 @@
 package com.example.maxime.noteshare;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public final static String SERVER_TEXT = "server_text";
-    public final static String FINAL_TEXT = "final_text";
     public final static String NOTE = "note";
     public final static String REQUEST = "request";
     public final static String RESULT = "result";
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
         this.smartContent = (ViewPager) findViewById(R.id.smart_content);
+        showWelcomeActivityIfFirstTime();
     }
 
     @Override
@@ -156,6 +158,14 @@ public class MainActivity extends AppCompatActivity {
                 Note note = (Note) data.getSerializableExtra(NOTE);
                 serverManager.updateCollaborators(note);
             }
+        }
+    }
+
+    private void showWelcomeActivityIfFirstTime() {
+        SharedPreferences share = getSharedPreferences("showWelcomm", Context.MODE_PRIVATE);
+        if(!share.contains("shownum")) {
+            Intent intent = new Intent(this, WelComeActivity.class);
+            startActivity(intent);
         }
     }
 

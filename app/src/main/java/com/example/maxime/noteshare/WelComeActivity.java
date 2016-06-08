@@ -37,19 +37,22 @@ public class WelComeActivity extends Activity {
         share = getSharedPreferences("showWelcomm", Context.MODE_PRIVATE);
         editor = share.edit();
         // if first log in
-        if (share.contains("shownum")) {
-            setContentView(R.layout.activity_main);
-            int num = share.getInt("shownum", 0);
-            editor.putInt("shownum", num++);
-            editor.commit();
-            skipActivity(1);
-        } else {
-            editor.putInt("shownum", 1);
-            editor.commit();
-            setContentView(R.layout.welcome_page);
-            initView();
-        }
-
+//        if (share.contains("shownum")) {
+//            setContentView(R.layout.activity_main);
+//            int num = share.getInt("shownum", 0);
+//            editor.putInt("shownum", num++);
+//            editor.commit();
+//            skipActivity(1);
+//        } else {
+//            editor.putInt("shownum", 1);
+//            editor.commit();
+//            setContentView(R.layout.welcome_page);
+//            initView();
+//        }
+        editor.putInt("shownum", 1);
+        editor.commit();
+        setContentView(R.layout.welcome_page);
+        initView();
     }
 
     private void initView() {
@@ -117,8 +120,8 @@ public class WelComeActivity extends Activity {
 
             @Override
             public void run() {
-                Intent intent = new Intent(WelComeActivity.this, MainActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(WelComeActivity.this, MainActivity.class);
+//                startActivity(intent);
                 WelComeActivity.this.finish();
             }
         }, 1000 * min);
