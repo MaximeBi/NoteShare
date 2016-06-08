@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WelComeActivity extends Activity {
-    private int[] ids = { R.mipmap.welcome_save,R.mipmap.welcome_notes,R.mipmap.welcome_share};
+    private int[] ids = { R.drawable.demo_save, R.drawable.demo_local, R.drawable.demo_distant};
 
     private List<View> guides = new ArrayList<>();
     private ViewPager pager;
