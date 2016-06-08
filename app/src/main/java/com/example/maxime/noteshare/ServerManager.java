@@ -16,15 +16,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ServerManager extends NotesManager {
@@ -112,12 +108,6 @@ public class ServerManager extends NotesManager {
     }
 
     protected void loadNotes(final String keywords) {
-        notes.add(new Note("server 1", "content 1"));
-        notes.add(new Note("server 2", "content 2"));
-        notes.add(new Note("server 3", "content 3"));
-        notes.add(new Note("server 4", "content 4"));
-        notes.add(new Note("server 5", "content 5"));
-
         if(hasLogin(new Runnable() {
             @Override
             public void run() {

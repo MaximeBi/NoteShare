@@ -10,8 +10,8 @@
     <string name="action_new">New</string>
     <string name="action_save">Save</string>
 
-    <string name="title_placeholder">Title</string>
-    <string name="content_placeholder">Content ...</string>
+    <string name="title_placeholder">Titre</string>
+    <string name="content_placeholder">Contenu ...</string>
     <string name="collaborator_placeholder">Ajouter un collaborateur ...</string>
 
     <string name="note_created">La note a été créée</string>

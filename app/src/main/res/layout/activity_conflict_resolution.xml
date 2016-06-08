@@ -14,7 +14,9 @@
         android:background="@color/color_secondary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:textSize="18dip"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        android:textColor="@color/highlight_color" />
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="0dp"

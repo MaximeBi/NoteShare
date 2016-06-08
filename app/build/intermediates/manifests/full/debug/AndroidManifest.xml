@@ -28,10 +28,10 @@
         <activity
             android:name="com.example.maxime.noteshare.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.example.maxime.noteshare.ConflictResolutionActivity" />
         <activity android:name="com.example.maxime.noteshare.CollaboratorsListActivity" />
+        <activity android:name="com.example.maxime.noteshare.SmartContentActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,22 +27,23 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static String LOCAL_TEXT = "local_text";
     public final static String SERVER_TEXT = "server_text";
     public final static String FINAL_TEXT = "final_text";
     public final static String NOTE = "note";
+    public final static String REQUEST = "request";
+    public final static String RESULT = "result";
     public final static int CODE_CONFLICT_RESOLUTION = 1001;
     public final static int CODE_COLLABORATORS_LIST = 2001;
 
     private LocalManager localManager;
     private ServerManager serverManager;
     private Note originalNote;
-    private EditText titleEdit;
-    private EditText contentEdit;
+    private EditText titleEdit,contentEdit;
     private GestureDetectorCompat detector;
     private ListView listView;
     private NoteAdapter localAdapter, serverAdapter;
     private LinearLayout localTab, serverTab, localActions, serverActions;
+    private ViewPager smartContent;
     private int currentTab;
 
     @Override
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         serverManager = ServerManager.getInstance(this);
         serverAdapter = new NoteAdapter(this, serverManager);
 
+        currentTab = 0;
         localActions = (LinearLayout) findViewById(R.id.local_actions);
         localTab = (LinearLayout) findViewById(R.id.local_tab);
         localTab.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
+        this.smartContent = (ViewPager) findViewById(R.id.smart_content);
     }
 
     @Override
@@ -261,20 +265,31 @@ public class MainActivity extends AppCompatActivity {
         originalNote = (Note) listView.getItemAtPosition(position);
         titleEdit.setText(originalNote.getTitle());
         contentEdit.setText(originalNote.getContent());
+        if(!originalNote.getSmartContents().isEmpty()) {
+            this.smartContent.setVisibility(View.VISIBLE);
+            final ViewPager pager = (ViewPager) findViewById(R.id.smart_content);
+            final SmartContentPagerAdapter smartContentPagerAdapter = new SmartContentPagerAdapter(getSupportFragmentManager(), originalNote.getSmartContents());
+            pager.setAdapter(smartContentPagerAdapter);
+        } else {
+            this.smartContent.setVisibility(View.GONE);
+        }
         closeDrawer();
     }
 
     public void saveNote() {
-        if (originalNote == null) {
-            originalNote = localManager.create(titleEdit.getText().toString(), contentEdit.getText().toString());
-            showMessage(R.string.note_created);
-        } else {
-            originalNote = localManager.update(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
-            showMessage(R.string.note_updated);
+        if(!contentEdit.getText().toString().isEmpty() && !titleEdit.getText().toString().isEmpty()) {
+            if (originalNote == null) {
+                originalNote = localManager.create(titleEdit.getText().toString(), contentEdit.getText().toString());
+                showMessage(R.string.note_created);
+            } else {
+                originalNote = localManager.update(originalNote, titleEdit.getText().toString(), contentEdit.getText().toString());
+                showMessage(R.string.note_updated);
+            }
         }
     }
 
     public void sendNote() {
+        saveNote();
         if (originalNote != null) {
             serverManager.sendNote(originalNote);
         }

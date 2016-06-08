@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/selected_item_background" >
+    android:background="@drawable/selected_item_background"
+    android:paddingLeft="@dimen/activity_horizontal_margin">
 
     <TextView
         android:id="@+id/collaborator_icon"
@@ -22,5 +23,5 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:textSize="20sp"
-        android:gravity="center"/>
+        android:gravity="center" />
 </LinearLayout>

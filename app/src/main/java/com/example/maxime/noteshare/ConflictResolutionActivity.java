@@ -42,6 +42,7 @@ public class ConflictResolutionActivity extends AppCompatActivity {
         initialiseView();
 
         final ImageButton validate = (ImageButton) findViewById(R.id.validate);
+        validate.setEnabled(false);
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

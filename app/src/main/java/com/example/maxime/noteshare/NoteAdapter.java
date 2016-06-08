@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -78,38 +77,6 @@ public class NoteAdapter extends Adapter<Note> implements Observer {
 
         return convertView;
     }
-
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        View vi = inflater.inflate(R.layout.element_note, null, true);
-//        if (!data.isEmpty()) {
-//            Note note =  data.get(position);
-//
-//            ImageView imageView = (ImageView) vi.findViewById(R.id.note_icon);
-//            imageView.setImageResource(R.mipmap.note_share_icon);
-//
-//            TextView title = (TextView) vi.findViewById(R.id.note_title);
-//            title.setText(note.getTitle());
-//
-//            TextView date = (TextView) vi.findViewById(R.id.note_date);
-//            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-//            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
-//            try {
-//                Date lastUpdate = format.parse(format.format(note.getLastUpdate()));
-//                Date today = format.parse(format.format(new Date()));
-//
-//                if(lastUpdate.compareTo(today)==0){
-//                    date.setText(format2.format(note.getLastUpdate()));
-//                }
-//                else{
-//                    date.setText(format.format(lastUpdate));
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return vi;
-//    }
 
     @Override
     public void update(Observable observable, Object data) {

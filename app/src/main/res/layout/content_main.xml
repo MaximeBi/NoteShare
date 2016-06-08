@@ -9,42 +9,52 @@
     tools:context="com.example.maxime.noteshare.MainActivity"
     tools:showIn="@layout/app_bar_main" >
 
-    <EditText
-        android:id="@+id/title_edit"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_header_height"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@color/color_secondary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:hint="@string/title_placeholder" />
-
-    <EditText
-        android:id="@+id/content_edit"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/title_header_height"
-        android:ems="10"
-        android:gravity="left|top"
-        android:inputType="textMultiLine"
-        android:background="@android:color/transparent"
-        android:hint="@string/content_placeholder" />
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/title_edit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_header_height"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:background="@color/color_secondary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            android:hint="@string/title_placeholder" />
 
+        <EditText
+            android:id="@+id/content_edit"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="left|top"
+            android:inputType="textMultiLine"
+            android:hint="@string/content_placeholder" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/smart_content"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@color/color_secondary" >
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/choice_upload"
         android:orientation="vertical"
         android:layout_width="250dp"
         android:layout_height="200dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible">
-
+        android:layout_centerInParent="true"
+        android:visibility="gone">
         <Button
             style="?android:attr/borderlessButtonStyle"
             android:layout_weight="1"
@@ -55,7 +65,6 @@
             android:textColor="#01579B"
             android:id="@+id/host"
             android:layout_gravity="center"/>
-
         <Button
             style="?android:attr/borderlessButtonStyle"
             android:layout_weight="1"
@@ -67,5 +76,4 @@
             android:id="@+id/local"
             android:layout_gravity="center" />
     </LinearLayout>
-
 </RelativeLayout>

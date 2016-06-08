@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.maxime.noteshare.SmartContentActivity">
+    <TextView
+        android:id="@+id/request"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_header_height"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:background="@color/color_secondary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:textSize="18dip"
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        android:textColor="@color/highlight_color"/>
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:background="@android:color/transparent"
+        android:textSize="18dip" />
+</LinearLayout>
