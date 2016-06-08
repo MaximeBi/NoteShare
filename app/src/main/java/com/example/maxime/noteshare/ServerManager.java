@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class ServerManager extends NotesManager {
 
-    private static final String IP_ADDRESS = "172.25.12.95";
+    private static final String IP_ADDRESS = "192.168.1.56";
     private static final String PORT = "8080";
     private String url;
     private static ServerManager instance = null;
