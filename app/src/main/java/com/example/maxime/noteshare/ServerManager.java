@@ -22,10 +22,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ServerManager extends NotesManager {
 
-    private static final String IP_ADDRESS = "192.168.1.56";
+    private static final String IP_ADDRESS = "172.25.12.95";
     private static final String PORT = "8080";
     private String url;
     private static ServerManager instance = null;
@@ -56,7 +57,9 @@ public class ServerManager extends NotesManager {
                     public void onResponse(JSONObject response) {
                         Log.d("ServerManager sendNote", response.toString());
                         activity.showMessage(R.string.enregistrement_online);
-                        notes.add(note);
+                        if(!notes.contains(note)) {
+                            notes.add(note);
+                        }
                         notifyObservers();
                     }
                 }, new Response.ErrorListener() {
