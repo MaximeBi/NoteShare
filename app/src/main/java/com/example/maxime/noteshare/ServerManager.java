@@ -158,21 +158,21 @@ public class ServerManager extends NotesManager {
         loadNotes(null);
     }
 
-    protected void deleteNotes(final ArrayList<Note> notes) {
+    protected void deleteNotes(final ArrayList<Note> n) {
         if(hasLogin(new Runnable() {
             @Override
             public void run() {
-                deleteNotes(notes);
+                deleteNotes(n);
             }
         })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
-                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.POST, url+"/delete", new JSONArray(Tools.toJson(notes)), new Response.Listener<JSONArray>() {
+                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.POST, url+"/delete", new JSONArray(Tools.toJson(n)), new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("ServerManager delete", response.toString());
                         activity.showMessage(R.string.delete_done);
-                        notes.removeAll(notes);
+                        notes.removeAll(n);
                         notifyObservers();
                     }
                 }, new Response.ErrorListener() {
