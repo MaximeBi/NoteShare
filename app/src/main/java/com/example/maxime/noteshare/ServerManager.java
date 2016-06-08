@@ -190,7 +190,9 @@ public class ServerManager extends NotesManager {
 
     private boolean hasLogin(final Runnable runnable) {
         if(getLogin() == null) {
-            createLoginDialog(runnable).show();
+            if (!activity.isFinishing()) {
+                createLoginDialog(runnable).show();
+            }
             return false;
         }
         return true;
@@ -218,7 +220,7 @@ public class ServerManager extends NotesManager {
             public void onClick(DialogInterface dialog, int whichButton) {
                 setLogin(input.getText().toString());
                 runnable.run();
-                return;
+                dialog.cancel();
             }
         });
 
@@ -227,7 +229,7 @@ public class ServerManager extends NotesManager {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 activity.showMessage(R.string.login_needed);
-                return;
+                dialog.cancel();
             }
         });
 
