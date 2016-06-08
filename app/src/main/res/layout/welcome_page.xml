@@ -29,17 +29,17 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/point1" />
+                android:src="@mipmap/ic_tab" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/point1" />
+                android:src="@mipmap/ic_tab" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/point1" />
+                android:src="@mipmap/ic_tab" />
 
         </LinearLayout>
 
@@ -47,6 +47,6 @@
             android:id="@+id/cur_dot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/point0" />
+            android:src="@mipmap/ic_tab2" />
     </FrameLayout>
 </RelativeLayout>
