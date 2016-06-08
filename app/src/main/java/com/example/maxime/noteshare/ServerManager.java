@@ -45,31 +45,43 @@ public class ServerManager extends NotesManager {
     }
 
     public void sendNote(final Note note) {
-         if(hasLogin(new Runnable() {
-             @Override
-             public void run() {
-                 sendNote(note);
-             }
-         })) {
+         sendNote(note, false);
+    }
+
+    public void sendNote(final Note note, boolean conflictsManaged) {
+        if(hasLogin(new Runnable() {
+            @Override
+            public void run() {
+                sendNote(note);
+            }
+        })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(Tools.toJson(note)), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("ServerManager sendNote", response.toString());
-                        activity.showMessage(R.string.enregistrement_online);
-                        if(!notes.contains(note)) {
-                            notes.add(note);
+                if(!conflictsManaged && note.getTitle().toLowerCase().equals("simulation")) {
+                    String serverText = "I am the very model of a cartoon individual,\n" +
+                            "My animation's comical, unusual, and whimsical,\n" +
+                            "I'm quite adept at funny gags, comedic theory I have read,\n" +
+                            "From wicked puns and stupid jokes to anvils that drop on your head.";
+                    activity.manageConflict(note, serverText);
+                } else {
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(Tools.toJson(note)), new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("ServerManager sendNote", response.toString());
+                            activity.showMessage(R.string.enregistrement_online);
+                            if (!notes.contains(note)) {
+                                notes.add(note);
+                            }
+                            notifyObservers();
                         }
-                        notifyObservers();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        activity.showMessage(R.string.error_enregistrement);
-                    }
-                });
-                queue.add(jsonObjectRequest);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            activity.showMessage(R.string.error_enregistrement);
+                        }
+                    });
+                    queue.add(jsonObjectRequest);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -154,12 +166,6 @@ public class ServerManager extends NotesManager {
             }
         })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
-            try {
-                JSONArray jsonArray = new JSONArray(Tools.toJson(notes));
-                System.out.print("test");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
             try {
                 JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.POST, url+"/delete", new JSONArray(Tools.toJson(notes)), new Response.Listener<JSONArray>() {
                     @Override

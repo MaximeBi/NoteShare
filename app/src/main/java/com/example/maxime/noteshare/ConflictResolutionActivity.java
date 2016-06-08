@@ -47,7 +47,8 @@ public class ConflictResolutionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent result = new Intent();
-                result.putExtra(MainActivity.FINAL_TEXT, getFinalText());
+                note.setContent(getFinalText());
+                result.putExtra(MainActivity.NOTE, note);
                 setResult(RESULT_OK, result);
                 finish();
             }

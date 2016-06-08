@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CODE_CONFLICT_RESOLUTION) {
             if (resultCode == RESULT_OK) {
-                String finalText =  data.getStringExtra(FINAL_TEXT);
-                Toast.makeText(this, finalText, Toast.LENGTH_LONG).show();
+                Note note = (Note) data.getSerializableExtra(NOTE);
+                serverManager.sendNote(note, true);
             }
         } else if (requestCode == CODE_COLLABORATORS_LIST) {
             if (resultCode == RESULT_OK) {
