@@ -19,12 +19,14 @@ public class Note implements Serializable, Comparable<Note> {
     private ArrayList<String> collaborators;
     private Date creationDate;
     private Date lastUpdate;
-    private HashMap<String, String> smartContents;
+    private ArrayList<String> smartWord;
+    private ArrayList<String> smartDef;
 
     public Note() {
         this.keywords = new ArrayList<>();
         this.collaborators = new ArrayList<>();
-        this.smartContents = new HashMap<>();
+        this.smartWord = new ArrayList<>();
+        this.smartDef = new ArrayList<>();
     }
 
     public Note(String title, String content) {
@@ -34,7 +36,8 @@ public class Note implements Serializable, Comparable<Note> {
         this.collaborators = new ArrayList<>();
         this.creationDate = new Date();
         this.lastUpdate = new Date();
-        this.smartContents = new HashMap<>();
+        this.smartWord = new ArrayList<>();
+        this.smartDef = new ArrayList<>();
         this.id = createId();
     }
 
@@ -48,8 +51,10 @@ public class Note implements Serializable, Comparable<Note> {
         this.collaborators.addAll(n.collaborators);
         this.creationDate = new Date();
         this.lastUpdate = new Date();
-        this.smartContents = new HashMap<>();
-        this.smartContents.putAll(n.smartContents);
+        this.smartWord = new ArrayList<>();
+        this.smartWord.addAll(n.smartWord);
+        this.smartDef = new ArrayList<>();
+        this.smartDef.addAll(n.smartDef);
         this.id = createId();
     }
 
@@ -71,8 +76,10 @@ public class Note implements Serializable, Comparable<Note> {
         this.keywords.addAll(n.keywords);
         this.collaborators.clear();
         this.collaborators.addAll(n.collaborators);
-        this.smartContents.clear();
-        this.smartContents.putAll(n.smartContents);
+        this.smartWord.clear();
+        this.smartWord.addAll(n.smartWord);
+        this.smartDef.clear();
+        this.smartDef.addAll(n.smartDef);
         this.lastUpdate = new Date();
     }
 
@@ -84,8 +91,10 @@ public class Note implements Serializable, Comparable<Note> {
         this.keywords.addAll(n.keywords);
         this.collaborators.clear();
         this.collaborators.addAll(n.collaborators);
-        this.smartContents.clear();
-        this.smartContents.putAll(n.smartContents);
+        this.smartWord.clear();
+        this.smartWord.addAll(n.smartWord);
+        this.smartDef.clear();
+        this.smartDef.addAll(n.smartDef);
         this.creationDate = n.creationDate;
         this.lastUpdate = n.lastUpdate;
         this.id = n.id;
@@ -98,7 +107,8 @@ public class Note implements Serializable, Comparable<Note> {
         this.collaborators.clear();
         this.creationDate = null;
         this.lastUpdate = null;
-        this.smartContents.clear();
+        this.smartWord.clear();
+        this.smartDef.clear();
         this.id = null;
 
     }
@@ -171,12 +181,20 @@ public class Note implements Serializable, Comparable<Note> {
         this.lastUpdate = lastUpdate;
     }
 
-    public HashMap<String, String> getSmartContents() {
-        return smartContents;
+    public ArrayList<String> getSmartWord() {
+        return smartWord;
     }
 
-    public void setSmartContents(HashMap<String, String> smartContents) {
-        this.smartContents = smartContents;
+    public void setSmartWord(ArrayList<String> smartWord) {
+        this.smartWord = smartWord;
+    }
+
+    public ArrayList<String> getSmartDef() {
+        return smartDef;
+    }
+
+    public void setSmartDef(ArrayList<String> smartDef) {
+        this.smartDef = smartDef;
     }
 
     @Override

@@ -9,24 +9,24 @@ import java.util.HashMap;
 
 public class SmartContentPagerAdapter extends FragmentStatePagerAdapter {
 
-    private HashMap<String, String> smartContents;
-    private ArrayList<String> requests;
+    private ArrayList<String> smartWord;
+    private ArrayList<String> smartDef;
 
-    public SmartContentPagerAdapter(FragmentManager fm, HashMap<String, String> smartContents) {
+    public SmartContentPagerAdapter(FragmentManager fm, ArrayList<String> smartWord, ArrayList<String> smartDef) {
         super(fm);
-        this.smartContents = smartContents;
-        this.requests = new ArrayList<>(smartContents.keySet());
+        this.smartWord = smartWord;
+        this.smartDef = smartDef;
     }
 
     @Override
     public Fragment getItem(int position) {
         SmartContentFragment smartContentFragment = new SmartContentFragment();
-        smartContentFragment.setArguments(requests.get(position), smartContents.get(requests.get(position)));
+        smartContentFragment.setArguments(smartWord.get(position), smartDef.get(position));
         return smartContentFragment;
     }
 
     @Override
     public int getCount() {
-        return smartContents.size();
+        return smartWord.size();
     }
 }

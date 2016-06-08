@@ -275,10 +275,10 @@ public class MainActivity extends AppCompatActivity {
         originalNote = (Note) listView.getItemAtPosition(position);
         titleEdit.setText(originalNote.getTitle());
         contentEdit.setText(originalNote.getContent());
-        if(!originalNote.getSmartContents().isEmpty()) {
+        if(!originalNote.getSmartWord().isEmpty()) {
             this.smartContent.setVisibility(View.VISIBLE);
             final ViewPager pager = (ViewPager) findViewById(R.id.smart_content);
-            final SmartContentPagerAdapter smartContentPagerAdapter = new SmartContentPagerAdapter(getSupportFragmentManager(), originalNote.getSmartContents());
+            final SmartContentPagerAdapter smartContentPagerAdapter = new SmartContentPagerAdapter(getSupportFragmentManager(), originalNote.getSmartWord(), originalNote.getSmartDef());
             pager.setAdapter(smartContentPagerAdapter);
         } else {
             this.smartContent.setVisibility(View.GONE);
