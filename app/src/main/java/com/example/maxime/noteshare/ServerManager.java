@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,7 +155,13 @@ public class ServerManager extends NotesManager {
         })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
             try {
-                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.DELETE, url, new JSONArray(Tools.toJson(notes)), new Response.Listener<JSONArray>() {
+                JSONArray jsonArray = new JSONArray(Tools.toJson(notes));
+                System.out.print("test");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.POST, url+"/delete", new JSONArray(Tools.toJson(notes)), new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("ServerManager delete", response.toString());
