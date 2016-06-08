@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -15,11 +16,11 @@ import java.util.Observer;
 
 public class NoteAdapter extends Adapter<Note> implements Observer {
 
-    static class ViewHolder {
-        TextView icon;
-        TextView title;
-        TextView date;
-    }
+//    static class ViewHolder {
+//        TextView icon;
+//        TextView title;
+//        TextView date;
+//    }
 
     private NotesManager notesManager;
 
@@ -38,44 +39,77 @@ public class NoteAdapter extends Adapter<Note> implements Observer {
         super.notifyDataSetChanged();
     }
 
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        ViewHolder viewHolder;
+//
+//        if (convertView == null) {
+//            convertView = inflater.inflate(R.layout.element_note, null);
+//            viewHolder = new ViewHolder();
+//            viewHolder.icon = (TextView) convertView.findViewById(R.id.note_icon);
+//            viewHolder.title = (TextView) convertView.findViewById(R.id.note_title);
+//            viewHolder.date = (TextView) convertView.findViewById(R.id.note_date);
+//            convertView.setTag(viewHolder);
+//        }
+//        else {
+//            viewHolder = (ViewHolder) convertView.getTag();
+//        }
+//
+//        Note note = getItem(position);
+//
+//        viewHolder.icon.setText(note.getTitle().toUpperCase().substring(0,1));
+//        ((GradientDrawable) viewHolder.icon.getBackground()).setColor(getColor(note));
+//        viewHolder.title.setText(note.getTitle());
+//        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//        SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+//        try {
+//            Date lastUpdate = format.parse(format.format(note.getLastUpdate()));
+//            Date today = format.parse(format.format(new Date()));
+//
+//            if(lastUpdate.compareTo(today)==0){
+//                viewHolder.date.setText(format2.format(note.getLastUpdate()));
+//            }
+//            else{
+//                viewHolder.date.setText(format.format(lastUpdate));
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return convertView;
+//    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        View vi = inflater.inflate(R.layout.element_note, null, true);
+        if (!data.isEmpty()) {
+            Note note =  data.get(position);
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.element_note, null);
-            viewHolder = new ViewHolder();
-            viewHolder.icon = (TextView) convertView.findViewById(R.id.note_icon);
-            viewHolder.title = (TextView) convertView.findViewById(R.id.note_title);
-            viewHolder.date = (TextView) convertView.findViewById(R.id.note_date);
-            convertView.setTag(viewHolder);
-        }
-        else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+            TextView imageView = (TextView) vi.findViewById(R.id.note_icon);
+            imageView.setText(note.getTitle().toUpperCase().substring(0,1));
+            ((GradientDrawable) imageView.getBackground()).setColor(getColor(note));
+            
+            TextView title = (TextView) vi.findViewById(R.id.note_title);
+            title.setText(note.getTitle());
 
-        Note note = getItem(position);
+            TextView date = (TextView) vi.findViewById(R.id.note_date);
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+            try {
+                Date lastUpdate = format.parse(format.format(note.getLastUpdate()));
+                Date today = format.parse(format.format(new Date()));
 
-        viewHolder.icon.setText(note.getTitle().toUpperCase().substring(0,1));
-        ((GradientDrawable) viewHolder.icon.getBackground()).setColor(getColor(note));
-        viewHolder.title.setText(note.getTitle());
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
-        try {
-            Date lastUpdate = format.parse(format.format(note.getLastUpdate()));
-            Date today = format.parse(format.format(new Date()));
-
-            if(lastUpdate.compareTo(today)==0){
-                viewHolder.date.setText(format2.format(note.getLastUpdate()));
+                if(lastUpdate.compareTo(today)==0){
+                    date.setText(format2.format(note.getLastUpdate()));
+                }
+                else{
+                    date.setText(format.format(lastUpdate));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            else{
-                viewHolder.date.setText(format.format(lastUpdate));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
-
-        return convertView;
+        return vi;
     }
 
     @Override
