@@ -36,5 +36,6 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textSize="15sp"
         android:ellipsize="end"
-        android:maxLines="2" />
+        android:maxLines="2"
+        android:textColor="@color/highlight_color"/>
 </LinearLayout>
