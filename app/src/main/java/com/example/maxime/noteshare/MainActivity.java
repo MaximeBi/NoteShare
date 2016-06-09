@@ -122,13 +122,13 @@ public class MainActivity extends AppCompatActivity {
         edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().length() > 2) {
+//                if(s.toString().length() > 2) {
                     if (isLocalTab()) {
                         localManager.filter(s.toString());
                     } else {
                         serverManager.filter(s.toString());
                     }
-                }
+//                }
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
