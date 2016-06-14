@@ -253,14 +253,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void manageConflict(Note noteLocal, String serverText) {
-        Intent intent = new Intent(this, ConflictResolutionActivity.class);
+        Intent intent = new Intent(MainActivity.this, ConflictResolutionActivity.class);
         intent.putExtra(NOTE, noteLocal);
         intent.putExtra(SERVER_TEXT, serverText);
         startActivityForResult(intent, CODE_CONFLICT_RESOLUTION);
     }
 
     public void manageCollaborators(Note n) {
-        Intent intent = new Intent(this, CollaboratorsListActivity.class);
+        Intent intent = new Intent(MainActivity.this, CollaboratorsListActivity.class);
         intent.putExtra(NOTE, n);
         startActivityForResult(intent, CODE_COLLABORATORS_LIST);
     }

@@ -21,6 +21,7 @@ public class Note implements Serializable, Comparable<Note> {
     private Date lastUpdate;
     private ArrayList<String> smartWord;
     private ArrayList<String> smartDef;
+    private Date serverVersionDate;
 
     public Note() {
         this.keywords = new ArrayList<>();
@@ -38,6 +39,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.lastUpdate = new Date();
         this.smartWord = new ArrayList<>();
         this.smartDef = new ArrayList<>();
+        this.serverVersionDate = this.creationDate;
         this.id = createId();
     }
 
@@ -55,6 +57,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.smartWord.addAll(n.smartWord);
         this.smartDef = new ArrayList<>();
         this.smartDef.addAll(n.smartDef);
+        this.serverVersionDate = this.creationDate;
         this.id = createId();
     }
 
@@ -81,6 +84,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.smartDef.clear();
         this.smartDef.addAll(n.smartDef);
         this.lastUpdate = new Date();
+        this.serverVersionDate = this.creationDate;
     }
 
     public void copy(Note n) {
@@ -97,6 +101,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.smartDef.addAll(n.smartDef);
         this.creationDate = n.creationDate;
         this.lastUpdate = n.lastUpdate;
+        this.serverVersionDate = this.creationDate;
         this.id = n.id;
     }
 
@@ -109,6 +114,7 @@ public class Note implements Serializable, Comparable<Note> {
         this.lastUpdate = null;
         this.smartWord.clear();
         this.smartDef.clear();
+        this.serverVersionDate = this.creationDate;
         this.id = null;
 
     }
@@ -200,5 +206,13 @@ public class Note implements Serializable, Comparable<Note> {
     @Override
     public int compareTo(Note another) {
         return another.lastUpdate.compareTo(lastUpdate);
+    }
+
+    public Date getServerVersionDate() {
+        return serverVersionDate;
+    }
+
+    public void setServerVersionDate(Date serverVersionDate) {
+        this.serverVersionDate = serverVersionDate;
     }
 }

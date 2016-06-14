@@ -5,6 +5,9 @@ var keywords = require('gramophone');
 var mongoose = require('mongoose');
 var ddg = require('ddg');
 
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+
 var upload = multer(); // for parsing multipart/form-data
 var app = express();
 
@@ -27,7 +30,8 @@ var noteShema = new mongoose.Schema({
   keywords  : { type : Array , default : [] },
   lastUpdate : { type : Date, default : Date.now },
   smartWord : { type : Array, default : [] },
-  smartDef : { type : Array, default : [] }
+  smartDef : { type : Array, default : [] },
+  serverVersionDate  : { type : Date, default : Date.now },
 });
 /*--------------------------------------------*/
 
@@ -35,56 +39,57 @@ var noteShema = new mongoose.Schema({
 var noteModel = mongoose.model('notes', noteShema);
 
 /*--AGENT AJOUTER DES MOTS CLEFS--*/
-var add_keywords = function(note){
+/*var add_keywords = function(note){
     note.keywords = keywords.extract(note.content);
-};
+};*/
 /*--------------------------------*/
 
-/*-----AGENT SMART CONTENT-------*/
-var add_smart_content = function(note){
-
-  var matches = [];
-  var regex = /\[([^\]]+)\]/;
-  matches = regex.exec(note.content);
-  var word;
-
-  if(matches.length == 0){
-    console.log('O smartContents');
-  }
-  else
-  {
-    for(var i=0; i < matches.length; i++)
-    {
-      if( i % 2 == 1){
-        word = matches[i];
-        ddg.query(word, function(err, data)
-        {
-            resulats = data.RelatedTopics;
-            if(resulats.length > 0)
-            {
-              console.log("WORD : " + word);
-              console.log("DEFINITION : " + resulats[0].Text);
-
-              note.smartWord.push(word);
-              note.smartDef.push(resulats[0].Text);
-
-              console.log(note.smartWord.toString());
-              console.log(note.smartDef.toString());
-
-              console.log('AJOUT DU SMART CONTENT');
-            }
-            else
-            {
-              console.log('ERREUR keywords');
-            }
-
-
-        });
-      }
-    }
-  }
+var hasConflicts = function(noteLocal, noteServer){
+    return noteLocal.serverVersionDate < noteServer.serverVersionDate && noteLocal.content != noteServer.content;
 };
 
+eventEmitter.on('smart', function(note){
+    note.keywords = keywords.extract(note.content);
+});
+
+eventEmitter.on('smart', function(note){
+
+    var matches = [];
+    var regex = /\[([^\]]+)\]/;
+    matches = regex.exec(note.content);
+    var word;
+
+    if(matches == null || matches.length == 0){
+      console.log('O smartContents');
+    }
+    else {
+      for(var i=0; i < matchs.lenght; i++)
+      {
+        if(i % 2 == 1){
+          word = matches[i];
+          ddg.query(word, function(err, data)
+          {
+              resulats = data.RelatedTopics;
+              if(resulats.length > 0)
+              {
+                console.log("WORD : " + word);
+                console.log("DEFINITION : " + resulats[0].Text);
+
+                note.smartWord.push(word);
+                note.smartDef.push(resulats[0].Text);
+
+                console.log(note.smartWord.toString());
+                console.log(note.smartDef.toString());
+              }
+              else
+              {
+                console.log('ERREUR keywords');
+              }
+          });
+        }
+      }
+    }
+});
 /*------------------------------*/
 
 
@@ -102,27 +107,21 @@ console.log("===============================\n\n");
 app.post('/', upload.array(), function(req, res, next){
 
     //Objet message de retour
-    var return_message = {
+    return_message = {
       code : 0, //-> O == tout est ok
-      message : "Note enregistré"
+      message : "Note enregistré",
+	  note : null
     };
 
     console.log("RECEPTION D'UNE NOTE :");
     console.log("-----------------------\n\n");
     console.log(req.body);
 
-
-    //req.body = add_smart_content(req.body);
-
-    var note = new noteModel(req.body); //On ajoute la note dans le model
-    add_keywords(note);
-    
-    //console.log('AJOUT KEYWORDS : ' + note.keywords + '\n')
-    //console.log('AJOUT SMART CONTENT :  ' + note.smartWord.toString()+ '\n');
-
-
+	var conflictsManaged = req.body.conflictsManaged;
+    var note = new noteModel(req.body.note); //On ajoute la note dans le model
+	
     var query = noteModel.find(null);
-    query.where('id', req.body.id);
+    query.where('id', note.id);
     query.limit(1);
 
     query.exec(function(err, comms){
@@ -137,38 +136,46 @@ app.post('/', upload.array(), function(req, res, next){
                   throw err;
                 }
                 else{
-                  noteModel.update({ id : req.body.id }, { smartWord : 'UTC' , smartDef : 'UTC est une très grande école d\'ingénieur en France'}, function(err){
-                    if(err){
-                      throw err;
-                    }
-                    else {
                       console.log('NOTE AJOUTÉ AVEC SUCCES\n');
                       console.log("===============================\n");
-                      return_message.code = 1;
-                      return_message.message = "Note ajouté";
+
+                      eventEmitter.emit('smart', note);
+                      eventEmitter.emit('conflict', note);
+                      
+					  return_message.note = note;
+					  res.json(return_message);
                     }
                   });
                 }
-              });
-            }
             //MODIFIER UNE NOTE
-            else{
-                  noteModel.update({ id : req.body.id }, { title : req.body.title , content : req.body.content , lastUpdate : req.body.lastUpdate, keywords : req.body.keywords }, function(err){
-                    if(err){
-                      throw err;
-                    }
-                    else {
-                      console.log('NOTE MODIFIÉ AVEC SUCCES\n');
-                      console.log("===============================\n");
-                      return_message.code = 2;
-                      return_message.message = "Note modifié";
-                    }
-                });
+              else {
+				  console.log("hasConflicts " + !hasConflicts(note, comms[0]));
+				  if(conflictsManaged || !hasConflicts(note, comms[0])) {
+					comms[0].serverVersionDate = new Date();
+					noteModel.update({ id : note.id }, { title : note.title , content : note.content , lastUpdate : note.lastUpdate, keywords : note.keywords, serverVersionDate : comms[0].serverVersionDate }, function(err){
+						if(err){
+						  throw err;
+						}
+						else {
+						  console.log('NOTE MODIFIÉ AVEC SUCCES\n');
+						  console.log("===============================\n");
+						  
+						  return_message.note = comms[0];
+						  res.json(return_message);
+						}
+					});
+				  } else {
+					console.log('NOTE CONFLITS\n');
+					console.log("===============================\n");
+					return_message.code = 3;
+					return_message.message = "Note conflits";
+					return_message.note = comms[0];
+					res.json(return_message);
+				  }
+			  }
             }
-      }
     });
-
-    res.json(return_message);
+	//res.json(return_message);
 });
 
 app.post('/collaborators', upload.array(), function(req, res, next){

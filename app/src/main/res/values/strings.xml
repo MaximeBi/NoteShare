@@ -22,6 +22,7 @@
 
     <string name="enregistrement_local">Note sauvegardée en mémoire locale</string>
     <string name="enregistrement_online">Note partagée sur le serveur</string>
+    <string name="enregistrement_online_conflit">Un conflit a été détecté</string>
     <string name="error_enregistrement">Erreur partage de la note en ligne</string>
     <string name="error_connexion_serveur">Erreur lors de la connexion avec le serveur</string>
     <string name="error_delete">Erreur lors de la suppression des notes</string>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.EditText;
@@ -24,10 +25,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ServerManager extends NotesManager {
 
-    private static final String IP_ADDRESS = "172.25.12.95";
+    private static final String IP_ADDRESS = "172.25.15.150";
     private static final String PORT = "8080";
     private String url;
     private static ServerManager instance = null;
@@ -56,32 +58,39 @@ public class ServerManager extends NotesManager {
             }
         })) {
             RequestQueue queue = Volley.newRequestQueue(activity);
+            Map<String, Object> params = new HashMap();
+            params.put("conflictsManaged", conflictsManaged);
+            params.put("note", note);
             try {
-                if(!conflictsManaged && note.getTitle().toLowerCase().equals("simulation")) {
-                    String serverText = "I am the very model of a cartoon individual,\n" +
-                            "My animation's comical, unusual, and whimsical,\n" +
-                            "I'm quite adept at funny gags, comedic theory I have read,\n" +
-                            "From wicked puns and stupid jokes to anvils that drop on your head.";
-                    activity.manageConflict(note, serverText);
-                } else {
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(Tools.toJson(note)), new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, new JSONObject(Tools.toJson(params)), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
                             Log.d("ServerManager sendNote", response.toString());
-                            activity.showMessage(R.string.enregistrement_online);
-                            if (!notes.contains(note)) {
-                                notes.add(note);
+                            if(response.getInt("code") == 3) {
+                                activity.showMessage(R.string.enregistrement_online_conflit);
+                                Note noteServer = Tools.toNote(response.getString("note"));
+                                activity.manageConflict(note, noteServer.getContent());
+                            } else {
+                                activity.showMessage(R.string.enregistrement_online);
+                                Note noteServer = Tools.toNote(response.getString("note"));
+                                note.setServerVersionDate(noteServer.getServerVersionDate());
+                                if (!notes.contains(note)) {
+                                    notes.add(note);
+                                }
+                                notifyObservers();
                             }
-                            notifyObservers();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            activity.showMessage(R.string.error_enregistrement);
-                        }
-                    });
-                    queue.add(jsonObjectRequest);
-                }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        activity.showMessage(R.string.error_enregistrement);
+                    }
+                });
+                queue.add(jsonObjectRequest);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -103,7 +112,7 @@ public class ServerManager extends NotesManager {
                         Log.d("ServerManager collab", response.toString());
                         activity.showMessage(R.string.collaborators_updated);
                         for(Note n : notes) {
-                            if(n.getId() == note.getId()) {
+                            if(n.getId().equals(note.getId())) {
                                 n.setCollaborators(note.getCollaborators());
                                 break;
                             }
