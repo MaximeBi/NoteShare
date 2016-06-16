@@ -75,7 +75,13 @@ public class ServerManager extends NotesManager {
                                 activity.showMessage(R.string.enregistrement_online);
                                 Note noteServer = Tools.toNote(response.getString("note"));
                                 note.setServerVersionDate(noteServer.getServerVersionDate());
-                                if (!notes.contains(note)) {
+                                boolean exists = false;
+                                for(Note n : notes) {
+                                    if(n.getId().equals(note.getId())) {
+                                        exists = true;
+                                    }
+                                }
+                                if (!exists) {
                                     notes.add(note);
                                 }
                                 notifyObservers();
